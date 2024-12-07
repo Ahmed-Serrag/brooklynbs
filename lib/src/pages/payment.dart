@@ -30,34 +30,32 @@ class TransactionsPage extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), // Rounded top-left corner
-              topRight: Radius.circular(30), // Rounded top-right corner
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30), // Rounded top-left corner
+            topRight: Radius.circular(30), // Rounded top-right corner
           ),
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: paymentHistory.length,
-            itemBuilder: (context, index) {
-              final payment = paymentHistory[index];
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          itemCount: paymentHistory.length,
+          itemBuilder: (context, index) {
+            final payment = paymentHistory[index];
 
-              return TransactionItem(
-                title: getOrdinal(index), // Use the ordinal title here
-                dueDate: payment.dueDate, // Pass the string directly
-                paidDate: payment.paidDate, // Pass the
-                paidAmount: payment.paidAmount,
+            return TransactionItem(
+              title: getOrdinal(index), // Use the ordinal title here
+              dueDate: payment.dueDate, // Pass the string directly
+              paidDate: payment.paidDate, // Pass the
+              paidAmount: payment.paidAmount,
 
-                amount: payment.amount, // Pass the string directly
-                isCredit:
-                    payment.status == 'paid', // Assuming 'paid' means a credit
-                status: payment.status,
-              );
-            },
-          ),
+              amount: payment.amount, // Pass the string directly
+              isCredit:
+                  payment.status == 'paid', // Assuming 'paid' means a credit
+              status: payment.status,
+            );
+          },
         ),
       ),
     );

@@ -50,7 +50,6 @@ class TransactionItem extends StatelessWidget {
       statusIcon = const Icon(Icons.payment, color: Colors.orange);
       subtitle = 'Due Date: $dueDate ';
       remainingValue = 'Remaining Amount: $remainingAmount ';
-      // money = '   $amount\n ($paidAmount)';
       money = '$paidAmount/$amount';
     } else {
       statusColor = Colors.grey;
@@ -58,74 +57,148 @@ class TransactionItem extends StatelessWidget {
           color: Colors.grey); // Default case for unknown status
     }
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6.0),
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).secondaryHeaderColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          // BoxShadow(
-          //   color: Colors.grey.withOpacity(0.1),
-          //   blurRadius: 10,
-          //   offset: const Offset(0, 6),
-          // ),
-        ],
+    // Wrap with GestureDetector to navigate to new page on tap
+    return GestureDetector(
+      onTap: (status == 'unpaid' || status == 'Portion Paid')
+          ? () {
+              // Navigate to a new page with the necessary info
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaymentDetailPage(
+                    title: title,
+                    amount: amount,
+                    paidAmount: paidAmount,
+                    remainingAmount: remainingAmount,
+                    status: status,
+                    dueDate: dueDate,
+                  ),
+                ),
+              );
+            }
+          : null, // Do nothing if status is neither "unpaid" nor "Portion Paid"
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6.0),
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).secondaryHeaderColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [],
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            // Transaction Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: currentTheme.primaryColor),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: currentTheme.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    remainingValue,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: currentTheme.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Transaction Amount
+            Text(
+              money,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: statusColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Payment Status Icon
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: statusColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: statusIcon,
+            ),
+          ],
+        ),
       ),
-      child: Row(
-        children: [
-          const SizedBox(width: 16),
-          // Transaction Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: currentTheme.primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  remainingValue,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: currentTheme.primaryColor,
-                  ),
-                ),
-              ],
+    );
+  }
+}
+
+class PaymentDetailPage extends StatelessWidget {
+  final String title;
+  final String amount;
+  final String paidAmount;
+  final double remainingAmount;
+  final String status;
+  final String dueDate;
+
+  const PaymentDetailPage({
+    super.key,
+    required this.title,
+    required this.amount,
+    required this.paidAmount,
+    required this.remainingAmount,
+    required this.status,
+    required this.dueDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Payment Details'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: currentTheme.primaryColor,
+              ),
             ),
-          ),
-          // Transaction Amount
-          Text(
-            money,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: statusColor,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Payment Status Icon
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: statusIcon,
-          ),
-        ],
+            const SizedBox(height: 10),
+            Text('Amount: $amount'),
+            Text('Paid Amount: $paidAmount'),
+            Text('Remaining Amount: $remainingAmount'),
+            Text('Due Date: $dueDate'),
+            const SizedBox(height: 20),
+            if (status == 'unpaid' || status == 'Portion Paid')
+              ElevatedButton(
+                onPressed: () {
+                  // You can implement the functionality to pay here
+                  // For example, you can show a payment form or button.
+                },
+                child: const Text('Pay Now'),
+              ),
+          ],
+        ),
       ),
     );
   }

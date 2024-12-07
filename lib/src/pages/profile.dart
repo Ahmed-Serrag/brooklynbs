@@ -1,4 +1,5 @@
 import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:clean_one/src/widgets/popup_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -88,7 +89,7 @@ class ProfilePage extends ConsumerWidget {
                   Text(
                     'Account Settings',
                     style: GoogleFonts.poppins(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: textColor,
                     ),
@@ -99,44 +100,26 @@ class ProfilePage extends ConsumerWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          const ProfileOption(
-                              icon: Icons.security, title: 'Account Security'),
-                          const ProfileOption(
-                              icon: Icons.notifications,
-                              title: 'Email notification preferences'),
-                          const ProfileOption(
-                              icon: Icons.access_alarm,
-                              title: 'Learning reminders'),
+                          ProfileOption(
+                              icon: Icons.security,
+                              title: 'Manage Account Data',
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const ChangeUserDetailsPopup();
+                                    });
+                              }),
+                          // const ProfileOption(
+                          //     icon: Icons.notifications, title: 'Change Email'),
+                          // const ProfileOption(
+                          //     icon: Icons.access_alarm,
+                          //     title: 'Learning reminders'),
 
                           // ID and Phone Number Section (Under Account Settings)
                           ProfileOption(
                               icon: Icons.person, title: 'ID: ${user.stID}'),
-                          ProfileOption(
-                              icon: Icons.phone, title: 'Phone: ${user.phone}'),
-                          ProfileOption(
-                              icon: Icons.logout_rounded,
-                              title: 'Log Out',
-                              onTap: () {
-                                ref.read(userStateProvider.notifier).logout();
-                              }),
-                          ProfileOption(
-                              icon: Icons.logout_rounded,
-                              title: 'Log Out',
-                              onTap: () {
-                                ref.read(userStateProvider.notifier).logout();
-                              }),
-                          ProfileOption(
-                              icon: Icons.logout_rounded,
-                              title: 'Log Out',
-                              onTap: () {
-                                ref.read(userStateProvider.notifier).logout();
-                              }),
-                          ProfileOption(
-                              icon: Icons.logout_rounded,
-                              title: 'Log Out',
-                              onTap: () {
-                                ref.read(userStateProvider.notifier).logout();
-                              }),
+                          ProfileOption(icon: Icons.phone, title: user.phone),
                           ProfileOption(
                               icon: Icons.logout_rounded,
                               title: 'Log Out',
@@ -147,6 +130,19 @@ class ProfilePage extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  Text(
+                    'About Us',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  const ProfileOption(
+                      icon: Icons.info, title: 'About Brooklyn Academy'),
+                  const ProfileOption(
+                      icon: Icons.description, title: 'Terms and Conditions'),
                 ],
               ),
             ),
