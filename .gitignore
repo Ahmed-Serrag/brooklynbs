@@ -1,0 +1,27 @@
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+ios/Flutter/.generated/
+
+# Android Studio
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Flutter/Dart IDE files
+.pub/
+.packages
+pubspec.lock
+
+# Generated files
+*.log
+*.swp
+.sublime-workspace
+.sublime-project
