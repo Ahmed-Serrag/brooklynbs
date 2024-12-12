@@ -1,3 +1,4 @@
+import 'package:clean_one/src/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,7 +76,7 @@ class MyApp extends ConsumerWidget {
     if (savedUser != null) {
       // Update using the provider's login method instead of direct state access
       ref.read(userStateProvider.notifier).login(savedUser);
-      // ref.read(userStateProvider.notifier).state = savedUser;
+      ref.read(userStateProvider.notifier).state = savedUser;
       // print("savedUser: $savedUser");
       // final userData = UserModel.fromJson(data['user']);
       prefs.setBool('isLoggedIn', true);

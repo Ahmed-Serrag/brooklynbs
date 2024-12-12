@@ -116,7 +116,13 @@ class AuthService {
 // Logout method to clear SharedPreferences
 Future<void> logout() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.clear(); // Clear all saved preferences on logout
+  await prefs.remove('token');
+  await prefs.remove('email');
+  await prefs.remove('name');
+  await prefs.remove('stId');
+  await prefs.remove('phone');
+  await prefs.remove('ppURL');
+  await prefs.remove('isLoggedIn'); // Clear the login flag
 }
 
 
