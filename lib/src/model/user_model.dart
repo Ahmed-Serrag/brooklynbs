@@ -1,9 +1,9 @@
 class UserModel {
-   String name;
-   String stID;
-   String email;
-   String phone;
-   String ppURL;
+  String name;
+  String stID;
+  String email;
+  String phone;
+  String ppURL;
 
   UserModel({
     required this.name,
@@ -15,7 +15,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     // final attributes = json['attributes'] ?? {};
-    
+
     return UserModel(
       name: json['name'] ?? 'Unknown Name',
       stID: json['stID'] ?? 'Unknown stID',
@@ -24,7 +24,13 @@ class UserModel {
       ppURL: json['ppURL'] ?? 'No image URL',
     );
   }
-
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'ppURL': ppURL,
+      'stID': stID,
+      'phone': phone,
+    };
+  }
 }
-
-

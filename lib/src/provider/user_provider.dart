@@ -1,5 +1,6 @@
 import 'package:clean_one/src/model/payment_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
 
 // StateNotifier to manage user state
@@ -10,8 +11,10 @@ class UserStateNotifier extends StateNotifier<UserModel?> {
     state = user; // Set the user when logged in
   }
 
-  void logout() {
+  Future<void> logout() async {
     state = null; // Clear the user when logged out
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // Clear all saved preferences on logout
   }
 
   bool isLoggedIn() {

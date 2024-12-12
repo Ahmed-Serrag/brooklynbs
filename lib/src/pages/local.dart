@@ -24,6 +24,7 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 90,
         elevation: 0,
         backgroundColor: Colors.transparent,
         // AppBar content for welcome message, name, and avatar
@@ -56,6 +57,9 @@ class HomePage extends ConsumerWidget {
                     fontSize: 14,
                     color: Colors.white70,
                   ),
+                ),
+                const SizedBox(
+                  height: 7,
                 ),
                 Text(
                   '${user.name.split(' ').first} ${user.name.split(' ').last}',

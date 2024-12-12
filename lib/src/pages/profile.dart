@@ -10,11 +10,12 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Access user state from userStateProvider
-    final user = ref.watch(userProvider);
+    // final user = ref.watch(userProvider);
+    final user = ref.watch(userStateProvider);
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final backgroundColor = Theme.of(context).cardColor;
 
-    if (user.name.isEmpty || user.email.isEmpty) {
+    if (user!.name.isEmpty || user.email.isEmpty) {
       return const Scaffold(
         body: Center(
           child:
