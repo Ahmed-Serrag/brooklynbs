@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:clean_one/src/model/payment_model.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../model/user_model.dart';
@@ -114,75 +115,69 @@ class AuthService {
 // Retrieve saved user data from SharedPreferences
 
 // Logout method to clear SharedPreferences
-Future<void> logout() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('token');
-  await prefs.remove('email');
-  await prefs.remove('name');
-  await prefs.remove('stId');
-  await prefs.remove('phone');
-  await prefs.remove('ppURL');
-  await prefs.remove('isLoggedIn'); // Clear the login flag
+// Future<void> logout() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   await prefs.remove('token');
+//   await prefs.remove('email');
+//   await prefs.remove('name');
+//   await prefs.remove('stId');
+//   await prefs.remove('phone');
+//   await prefs.remove('ppURL');
+//   await prefs.remove('isLoggedIn'); // Clear the login flag
+// }
+
+// Send password reset email method
+Future<String?> sendPasswordResetEmail(String userId) async {
+  try {
+    final response = await http.post(
+      Uri.parse(Endpoints.forgetPw), // Make sure this is the correct endpoint
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${Endpoints.token}',
+      },
+      body: json.encode({
+        'stId': userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      if (data['user'] != null) {
+        final newPassword = data['user']['password']; // Get the new password
+        final email = data['user']['email']; // Get the email address
+
+        // Now, send the password to the user via email
+        await _sendPasswordToUserEmail(newPassword, email);
+        print("newPassword111111111111111111111111111: $newPassword");
+        print("email11111111111111111111111111111111: $email");
+
+        return null; // Password reset email sent successfully
+      } else {
+        return data['message'] ?? 'Failed to send reset email';
+      }
+    } else {
+      return 'Failed to send request to reset password';
+    }
+  } catch (e) {
+    return 'An error occurred: $e';
+  }
 }
 
+// Private method to send email with password
+Future<void> _sendPasswordToUserEmail(
+    String newPassword, String userEmail) async {
+  final email = Email(
+    body:
+        'Your new password is: $newPassword\n\nPlease change it after logging in.',
+    subject: 'Password Reset Request',
+    recipients: [userEmail], // Dynamically use the user's email
+    isHTML: false,
+  );
 
-
-
-
-
-  // Send password reset email method
-  // Future<String?> sendPasswordResetEmail(String userId) async {
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(
-  //           '${Endpoints.baseUrl}/forget-password'), // Make sure this is the correct endpoint
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer ${Endpoints.token}',
-  //       },
-  //       body: json.encode({
-  //         'userId': userId,
-  //       }),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-
-  //       if (data['success'] == true) {
-  //         final newPassword = data[
-  //             'newPassword']; // Assuming the backend sends the new password
-
-  //         // Now, send the password to the user via email
-  //         await _sendPasswordToUserEmail(newPassword);
-
-  //         return null; // Password reset email sent successfully
-  //       } else {
-  //         return data['message'] ?? 'Failed to send reset email';
-  //       }
-  //     } else {
-  //       return 'Failed to send request to reset password';
-  //     }
-  //   } catch (e) {
-  //     return 'An error occurred: $e';
-  //   }
-  // }
-
-  // Private method to send email with password
-  // Future<void> _sendPasswordToUserEmail(String newPassword) async {
-  //   final email = Email(
-  //     body:
-  //         'Your new password is: $newPassword\n\nPlease change it after logging in.',
-  //     subject: 'Password Reset Request',
-  //     recipients: [
-  //       'user@example.com'
-  //     ], // This should be dynamically set with the user's email
-  //     isHTML: false,
-  //   );
-
-  //   try {
-  //     await FlutterEmailSender.send(email); // This is where the email is sent
-  //   } catch (e) {
-  //     print('Error sending email: $e');
-  //   }
-  // }
-
+  try {
+    await FlutterEmailSender.send(email); // Send the email
+  } catch (e) {
+    print('Error sending email: $e');
+  }
+}

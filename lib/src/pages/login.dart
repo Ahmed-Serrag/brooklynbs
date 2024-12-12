@@ -83,6 +83,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               onPressed: () {
                 final id = _idController.text.trim();
                 if (id.isNotEmpty) {
+                  sendPasswordResetEmail(id);
                   // Call a service to send a reset email to the provided ID
                   // For now, you can print it or handle it according to your logic
                   // AuthService().sendPasswordResetEmail(id);
