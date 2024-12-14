@@ -59,7 +59,7 @@ class MyApp extends ConsumerWidget {
 
     return buildAppWithAdaptiveTheme(
       home: isFirstTime
-          ? OnboardingPage(onboardingComplete: () {
+          ? OnBoardingPage(onboardingComplete: () {
               // After onboarding, set 'isFirstTime' to false
               prefs.setBool('isFirstTime', false);
             })

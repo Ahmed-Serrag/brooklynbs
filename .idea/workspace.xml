@@ -5,21 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e69a7abf-95ea-40d5-a52c-7ca37be47551" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clean_one.iml" beforeDir="false" afterPath="$PROJECT_DIR$/clean_one.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/model/user_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/model/user_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/pages/local.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/local.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/pages/login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/login.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/pages/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/provider/user_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/provider/user_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/services/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/auth.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/services/end_points.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/end_points.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/pages/onboarding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/onboarding.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
@@ -46,6 +37,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Google/AndroidStudio2024.2/device-explorer/Pixel 9 Pro API Baklava/_/data/data/com.example.clean_one/shared_prefs/FlutterSharedPreferences.xml" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
