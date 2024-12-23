@@ -43,6 +43,7 @@ dependencies:
   introduction_screen: ^3.1.14
   line_icons: ^2.0.3
   mailer: ^6.3.0
+  percent_indicator: ^4.2.4
   riverpod_annotation: ^2.6.1
   shared_preferences: ^2.3.3
   simple_circular_progress_bar: ^1.0.2
@@ -51,13 +52,12 @@ dev_dependencies:
   build_runner: ^2.4.13
   custom_lint: ^0.7.0
 
-
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/33.jpg"  # Your icon file path
-  ios_icon: "assets/images/33.jpg"  # Optional: Custom iOS icon
-  android_icon: "assets/images/33.jpg"  # Optional: Custom Android icon
+  image_path: "assets/images/33.jpg" # Your icon file path
+  ios_icon: "assets/images/33.jpg" # Optional: Custom iOS icon
+  android_icon: "assets/images/33.jpg" # Optional: Custom Android icon
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

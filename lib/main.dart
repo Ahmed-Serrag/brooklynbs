@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:clean_one/src/Theme/themedata.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:clean_one/src/services/auth.dart'; // Make sure this is imported
+import 'package:clean_one/src/services/auth_manager.dart'; // Import AuthManager
 import 'src/pages/home.dart';
 import 'src/pages/login.dart';
-import 'src/pages/onboarding.dart'; // Add onboarding page
+import 'src/pages/onboarding.dart';
 import 'src/provider/user_provider.dart';
 
 void main() async {
@@ -18,7 +18,6 @@ void main() async {
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-  // Wrap your app with ProviderScope here
   runApp(
     ProviderScope(
       child: MyApp(
@@ -45,16 +44,14 @@ class MyApp extends ConsumerWidget {
     required this.isLoggedIn,
   });
 
-  get data => null;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch the user provider to determine the initial screen
     final user = ref.watch(userStateProvider);
 
-    // If user is already logged in, try to auto-login
+    // If user is already logged in, trigger auto-login
     if (isLoggedIn && user == null) {
-      _autoLogin(ref);
+      AuthManager.autoLogin(ref); // Use the centralized auto-login logic
     }
 
     return buildAppWithAdaptiveTheme(
@@ -66,20 +63,5 @@ class MyApp extends ConsumerWidget {
           : (user != null ? const HomePageWithNav() : const LoginPage()),
       savedThemeMode: savedThemeMode,
     );
-  }
-
-  Future<void> _autoLogin(WidgetRef ref) async {
-    final authService = AuthService();
-    final savedUser = await authService.getSavedUser();
-
-    if (savedUser != null) {
-      // Update using the provider's login method instead of direct state access
-      ref.read(userStateProvider.notifier).login(savedUser);
-      // ref.read(userProvider.notifier).state = savedUser;
-      // ref.read(userStateProvider.notifier).state = savedUser;
-      // print("savedUser: $savedUser");
-      // final userData = UserModel.fromJson(data['user']);
-      prefs.setBool('isLoggedIn', true);
-    }
   }
 }

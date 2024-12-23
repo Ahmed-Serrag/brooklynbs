@@ -1,11 +1,16 @@
+import 'package:clean_one/src/provider/user_provider.dart';
 import 'package:clean_one/src/widgets/Course_Card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CoursePage extends StatelessWidget {
+class CoursePage extends ConsumerWidget {
   const CoursePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Read courses from the provider
+    final courses = ref.watch(courseProvider);
+    
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -24,88 +29,35 @@ class CoursePage extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: const SingleChildScrollView(
-          child: Column(
-            children: [
-              CourseCard(
-                title: 'Product Design v1.0',
-                instructor: 'Robertson Connie',
-                price: '\$190',
-                duration: '16 hours',
+        child: courses.isEmpty
+            ? const Center(child: Text("No courses available"))
+            : ListView.builder(
+                itemCount: courses.length,
+                itemBuilder: (context, courseIndex) {
+                  final course = courses[courseIndex];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: course.courseDetails.values.map((detail) {
+                      final isType2 = detail.code.startsWith('2');
+
+                      return CourseCard(
+                        title: detail.name, // Course name
+                        courseCode: detail.code, // Course code
+                        startDate: detail.date, // Start date
+                        grade: detail.grade, // Grade
+                        attendance: isType2
+                            ? int.tryParse(detail.attendance) ?? 0
+                            : null, // Attendance only for Type 2
+                        totalLectures: isType2
+                            ? int.tryParse(detail.totalLectures) ?? 1
+                            : null, // Total lectures only for Type 2
+                        isType2: isType2, // Determines layout type
+                      );
+                    }).toList(),
+                  );
+                },
               ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Java Development',
-                instructor: 'Nguyen Shane',
-                price: '\$190',
-                duration: '16 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-              SizedBox(height: 16),
-              CourseCard(
-                title: 'Visual Design',
-                instructor: 'Bert Pullman',
-                price: '\$250',
-                duration: '14 hours',
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

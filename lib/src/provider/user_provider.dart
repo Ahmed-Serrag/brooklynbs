@@ -1,3 +1,4 @@
+import 'package:clean_one/src/model/course_model.dart';
 import 'package:clean_one/src/model/payment_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,13 +35,17 @@ final userStateProvider = StateNotifierProvider<UserStateNotifier, UserModel?>(
 );
 
 // Define a provider for user data
-final userProvider = StateProvider<UserModel>((ref) {
-  return UserModel(name: '', stID: '', email: '', phone: '', ppURL: '');
-});
+// final userProvider = StateProvider<UserModel>((ref) {
+//   return UserModel(name: '', stID: '', email: '', phone: '', ppURL: '');
+// });
 
 // Provider for storing payment history data
 final paymentHistoryProvider = StateProvider<List<PaymentHistoryModel>>((ref) {
   return []; // Empty list as default for payment history
+});
+
+final courseProvider = StateProvider<List<Course>>((ref) {
+  return []; // Default empty list for courses
 });
 
 final selectedIndexProvider =

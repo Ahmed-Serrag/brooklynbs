@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:clean_one/src/model/course_model.dart';
 import 'package:clean_one/src/model/payment_model.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,18 +43,21 @@ class AuthService {
         final data = json.decode(response.body);
 
         if (data['success'] == true) {
-          // Extract user data and payment history
+          // Extract user data and payment history and courses
           final userData = UserModel.fromJson(data['user']);
-          // Update provider states
           ref.read(userStateProvider.notifier).login(userData);
-          ref.read(userProvider.notifier).state = userData;
           final paymentData = List<PaymentHistoryModel>.from(data['payments']
               .map((payment) => PaymentHistoryModel.fromJson(payment)));
           ref.read(paymentHistoryProvider.notifier).state = paymentData;
 
-          // Save user data and token to SharedPreferences
-          await _saveTokenAndUserData(data['token'], userData);
+          final courseData = List<Course>.from(
+            data['courses'].map((course) => Course.fromJson(course)),
+          );
+          ref.read(courseProvider.notifier).state = courseData;
 
+          // Save user data and token to SharedPreferences
+          await _saveTokenAndUserData(
+              emailOrId, password, data['token'], userData);
           return null; // Login successful, no error message
         } else {
           return data['message'] ?? 'Login failed';
@@ -67,8 +71,12 @@ class AuthService {
   }
 
   // Save JWT token and user data to SharedPreferences
-  Future<void> _saveTokenAndUserData(String token, UserModel userData) async {
+  Future<void> _saveTokenAndUserData(String emailOrId, String password,
+      String token, UserModel userData) async {
     final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('emailOrId', emailOrId);
+    await prefs.setString('password', password);
 
     // Save the JWT token and user details
     await prefs.setString('token', token);
@@ -91,6 +99,8 @@ class AuthService {
     if (!isLoggedIn) {
       return null; // No logged-in user
     }
+
+    // Save credentials and token securely
 
     final email = prefs.getString('email');
     final name = prefs.getString('name');

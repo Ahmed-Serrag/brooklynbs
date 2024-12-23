@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
@@ -7,10 +12,17 @@
     <list default="true" id="e69a7abf-95ea-40d5-a52c-7ca37be47551" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clean_one.iml" beforeDir="false" afterPath="$PROJECT_DIR$/clean_one.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/settings.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/pages/onboarding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/onboarding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/pages/course.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/pages/course.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/provider/user_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/provider/user_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/services/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/auth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/services/auth_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/auth_manager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widgets/course_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widgets/course_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widgets/course_prog.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
@@ -70,7 +82,11 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Flutter new Brooklyn App/clean_one&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/Brooklyn App/clean_one&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.32934684&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;gradle.compiler&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
