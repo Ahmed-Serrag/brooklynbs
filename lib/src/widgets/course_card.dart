@@ -12,6 +12,7 @@ class CourseCard extends StatelessWidget {
   final int?
       totalLectures; // gX_total_lec (total lectures, only for courses starting with 2)
   final bool isType2; // Determines the type of course (2 or 5)
+  final bool isProject; // Determines if it's a project (starts with 202)
 
   CourseCard({
     super.key,
@@ -22,6 +23,7 @@ class CourseCard extends StatelessWidget {
     this.attendance,
     this.totalLectures,
     required this.isType2, // Determines layout type
+    required this.isProject, // Determines layout type
   });
 
   @override
@@ -55,7 +57,6 @@ class CourseCard extends StatelessWidget {
                 const SizedBox(height: 4),
 
                 // Course code
-
                 Text(
                   'Course Code: $courseCode',
                   style: GoogleFonts.poppins(
@@ -104,33 +105,36 @@ class CourseCard extends StatelessWidget {
           ),
 
           // Conditional Content
-          if (isType2)
-            // For courses starting with 2: Attendance and progress circle
-            CircularPercentIndicator(
-              radius: 30.0,
-              lineWidth: 4.0,
-              percent: (attendance ?? 0) / (totalLectures ?? 1),
-              center: Text(
-                '${attendance ?? 0}/${totalLectures ?? 0}',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: currentTheme.primaryColor,
-                ),
-              ),
-              progressColor: currentTheme.appBarTheme.backgroundColor,
-              backgroundColor: Colors.grey[300]!,
-              footer: const Text('Attendance'),
-            )
-          else
-            // For courses starting with 5: Online icon
-            const Text(
-              ' Online\nCourse',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green),
-            ),
+          isProject
+              ? SizedBox.shrink() // Render nothing for projects
+              : isType2
+                  // For courses starting with 2: Attendance and progress circle
+                  ? CircularPercentIndicator(
+                      radius: 30.0,
+                      lineWidth: 4.0,
+                      percent: (attendance ?? 0) / (totalLectures ?? 1),
+                      center: Text(
+                        '${attendance ?? 0}/${totalLectures ?? 0}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: currentTheme.primaryColor,
+                        ),
+                      ),
+                      progressColor: currentTheme.appBarTheme.backgroundColor,
+                      backgroundColor: Colors.grey[300]!,
+                      footer: const Text('Attendance'),
+                    )
+                  :
+                  // For courses starting with 5: Online icon
+                  const Text(
+                      ' Online\nCourse',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
         ],
       ),
     );

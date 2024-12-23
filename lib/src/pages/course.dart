@@ -10,7 +10,7 @@ class CoursePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Read courses from the provider
     final courses = ref.watch(courseProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -39,7 +39,11 @@ class CoursePage extends ConsumerWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: course.courseDetails.values.map((detail) {
-                      final isType2 = detail.code.startsWith('2');
+                      final isProject = detail.code
+                          .startsWith('202'); // Check for '202' first
+                      final isType2 = !isProject &&
+                          detail.code
+                              .startsWith('2'); // Exclude '202' from Type 2
 
                       return CourseCard(
                         title: detail.name, // Course name
@@ -52,6 +56,7 @@ class CoursePage extends ConsumerWidget {
                         totalLectures: isType2
                             ? int.tryParse(detail.totalLectures) ?? 1
                             : null, // Total lectures only for Type 2
+                        isProject: isProject,
                         isType2: isType2, // Determines layout type
                       );
                     }).toList(),
