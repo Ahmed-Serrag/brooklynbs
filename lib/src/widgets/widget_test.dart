@@ -93,16 +93,19 @@ class OldRequestsWidget extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
+                  child: OutlinedButton(
                     onPressed: onNewRequestTap,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(12), // Rounded button
+                        borderRadius: BorderRadius.circular(12),
+                        // Rounded button
                       ),
-                      backgroundColor:
-                          Theme.of(context).primaryColor, // Button color
+                      side: BorderSide(
+                        color: Theme.of(context).primaryColor, // Border color
+                      ),
+                      backgroundColor: Theme.of(context)
+                          .secondaryHeaderColor, // Button color
                     ),
                     child: const Text('New Request'),
                   ),
@@ -121,7 +124,7 @@ class OldRequestsWidget extends StatelessWidget {
                             BorderRadius.circular(12), // Rounded button
                       ),
                     ),
-                    child: const Text('Check Old Requests'),
+                    child: const Text('Check All Requests'),
                   ),
                 ),
               ],

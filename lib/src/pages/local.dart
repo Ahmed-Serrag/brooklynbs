@@ -201,12 +201,13 @@ class OldRequestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
       appBar: AppBar(
-        title: const Text('Old Requests'),
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
+        title: const Text('All Requests'),
       ),
       body: Center(
-        child:
-            const Text('Here, you can handle the old requests page content.'),
+        child: const Text('OLD REQUESTS PAGE'),
       ),
     );
   }
