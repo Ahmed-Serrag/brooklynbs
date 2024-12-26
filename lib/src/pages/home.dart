@@ -25,7 +25,7 @@ class _HomePageWithNavState extends ConsumerState<HomePageWithNav> {
     final selectedIndex = ref.watch(selectedIndexProvider);
 
     final widgetOptions = <Widget>[
-      const HomePage(),
+      HomePage(),
       const CoursePage(),
       const TransactionsPage(),
       const ProfilePage(),

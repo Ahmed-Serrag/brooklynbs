@@ -1,152 +1,178 @@
+import 'package:clean_one/src/model/user_model.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:clean_one/src/widgets/fourm_complain.dart';
 import 'package:clean_one/src/widgets/popup_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/dialog.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
+  void _openForm(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Makes the modal adjust for keyboard
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return ReusableForm(
+          onSubmit: (formData) {
+            Navigator.of(context).pop(); // Close the modal
+            print('Form Data: $formData'); // Handle the form submission
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Form Submitted: ${formData['name']}')),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  static const List<String> languages = [
+    "Bangle",
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Chinese",
+    "Hindi",
+    "Arabic",
+    "Russian",
+    "Portuguese",
+    "Japanese",
+    "Italian",
+  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Access user state from userStateProvider
     final user = ref.watch(userStateProvider);
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final backgroundColor = Theme.of(context).cardColor;
 
-    if (user!.name.isEmpty || user.email.isEmpty) {
+    if (user == null || user.name.isEmpty || user.email.isEmpty) {
       return const Scaffold(
         body: Center(
-          child:
-              CircularProgressIndicator(), // Show loading indicator until data is loaded
+          child: CircularProgressIndicator(),
         ),
       );
     }
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      // const Color(0xFF4A5EE4), // Light background for the lower section
       body: Column(
         children: [
-          const SizedBox(
-            height: 70,
+          const SizedBox(height: 70),
+          _buildProfileHeader(user),
+          const SizedBox(height: 50),
+          Expanded(
+            child: _buildSettingsSection(
+                context, ref, user, backgroundColor, textColor),
           ),
-          // Upper Section with Profile Picture and Name (Purple Background)
-          Container(
-            // color: const Color(0xFF4A5EE4), // Purple background colo
-            child: Column(
-              children: [
-                // Profile Picture Section
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    user.ppURL.isNotEmpty
-                        ? user.ppURL
-                        : 'https://via.placeholder.com/150',
-                  ),
-                ),
-                const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
 
-                // Name and Email Section
-                Text(
-                  user.name.isNotEmpty ? user.name : 'Unknown Name',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  user.email.isNotEmpty ? user.email : 'Unknown Email',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+  Widget _buildProfileHeader(UserModel user) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: NetworkImage(
+            user.ppURL.isNotEmpty
+                ? user.ppURL
+                : 'https://via.placeholder.com/150',
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          user.name,
+          style: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          user.email,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingsSection(BuildContext context, WidgetRef ref,
+      UserModel user, Color backgroundColor, Color? textColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+      ),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Account Settings',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: textColor,
             ),
           ),
-          const SizedBox(
-            height: 50,
-          ),
-
-          // Lower Section with Account Settings (White Background and Border Radius)
+          const SizedBox(height: 16),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30), // Rounded top-left corner
-                  topRight: Radius.circular(30), // Rounded top-right corner
-                ),
-              ),
-              padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Account Settings Section Header (Fixed)
-                  Text(
-                    'Account Settings',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
+                  ProfileOption(
+                    icon: Icons.security,
+                    title: 'Manage Account Data',
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (_) => const ChangeUserDetailsPopup(),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  // Wrap only the options in SingleChildScrollView
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ProfileOption(
-                              icon: Icons.security,
-                              title: 'Manage Account Data',
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const ChangeUserDetailsPopup();
-                                    });
-                              }),
-                          // const ProfileOption(
-                          //     icon: Icons.notifications, title: 'Change Email'),
-                          // const ProfileOption(
-                          //     icon: Icons.access_alarm,
-                          //     title: 'Learning reminders'),
-
-                          // ID and Phone Number Section (Under Account Settings)
-                          ProfileOption(
-                              icon: Icons.person, title: 'ID: ${user.stID}'),
-                          ProfileOption(icon: Icons.phone, title: user.phone),
-                          ProfileOption(
-                              icon: Icons.logout_rounded,
-                              title: 'Log Out',
-                              onTap: () {
-                                ref.read(userStateProvider.notifier).logout();
-                              }),
-                        ],
-                      ),
-                    ),
+                  ProfileOption(icon: Icons.person, title: 'ID: ${user.stID}'),
+                  ProfileOption(
+                    icon: Icons.phone,
+                    title: user.phone,
+                    onTap: () => _openForm(context),
                   ),
-                  Text(
-                    'About Us',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
+                  ProfileOption(
+                    icon: Icons.logout_rounded,
+                    title: 'Log Out',
+                    onTap: () => ref.read(userStateProvider.notifier).logout(),
                   ),
-                  const SizedBox(height: 7),
-                  const ProfileOption(
-                      icon: Icons.info, title: 'About Brooklyn Academy'),
-                  const ProfileOption(
-                      icon: Icons.description, title: 'Terms and Conditions'),
                 ],
               ),
             ),
           ),
+          Text(
+            'About Us',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 7),
+          const ProfileOption(
+              icon: Icons.info, title: 'About Brooklyn Academy'),
+          ProfileOption(
+              icon: Icons.description,
+              title: 'Terms and Conditions',
+              onTap: () {
+                CustomBottomDialog.showTermsAndConditions(
+                    context: context, title: 'Hello world');
+              }),
         ],
       ),
     );
@@ -168,6 +194,7 @@ class ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(

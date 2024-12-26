@@ -1,5 +1,9 @@
+import 'package:clean_one/src/model/user_model.dart';
+import 'package:clean_one/src/widgets/fullform.dart';
 import 'package:clean_one/src/widgets/popup_dialog.dart';
 import 'package:clean_one/src/widgets/progress_card.dart';
+import 'package:clean_one/src/widgets/simple_form.dart';
+import 'package:clean_one/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,18 +11,47 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider/user_provider.dart';
 
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
+  void _openForm(BuildContext context, UserModel user) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SimpleForm(
+          onSubmit: (selectedOption) {
+            Navigator.of(context).pop(); // Close the modal
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CompleteForm(
+                  type: selectedOption,
+                  user: user,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  final List<Map<String, String>> oldRequests = [
+    {'description': 'Request 1: Lorem', 'status': 'done'},
+    {'description': 'Complain 1: Dolor', 'status': 'waiting'},
+    {'description': 'Request 2: Consectetur', 'status': 'done'},
+    {'description': 'Request 3: Sed Do', 'status': 'waiting'},
+  ];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Access user data from userStateProvider
     final user = ref.watch(userStateProvider);
     final currentTheme = Theme.of(context);
 
     if (user == null) {
       return const Center(
-        child:
-            CircularProgressIndicator(), // Show loading indicator if user is null
+        child: CircularProgressIndicator(),
       );
     }
 
@@ -27,13 +60,10 @@ class HomePage extends ConsumerWidget {
         toolbarHeight: 90,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        // AppBar content for welcome message, name, and avatar
         title: Row(
           children: [
-            // Avatar on the Leading
             GestureDetector(
               onTap: () {
-                // Change the selected tab index to 3 (Profile)
                 ref.read(selectedIndexProvider.notifier).state = 3;
               },
               child: CircleAvatar(
@@ -45,9 +75,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 16), // Space between avatar and text
-
-            // Welcome Back and Name in the Center
+            const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -58,9 +86,7 @@ class HomePage extends ConsumerWidget {
                     color: Colors.white70,
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
-                ),
+                const SizedBox(height: 7),
                 Text(
                   '${user.name.split(' ').first} ${user.name.split(' ').last}',
                   style: GoogleFonts.poppins(
@@ -71,10 +97,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ],
             ),
-
-            const Spacer(), // Push Notification Icon to the right
-
-            // Notification Icon on the Action Section
+            const Spacer(),
             IconButton(
               icon: const Icon(
                 Icons.notifications_none,
@@ -84,7 +107,7 @@ class HomePage extends ConsumerWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return const CustomPopup(); // Your custom popup widget
+                    return const CustomPopup();
                   },
                 );
               },
@@ -94,7 +117,6 @@ class HomePage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // White Rounded Section for Lower Content
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -109,54 +131,58 @@ class HomePage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Course Progress Card Positioned at the Top
                     const ProgressCard(
                       title: "Course Progress",
+                      secTitle: "Course Progress",
+                      thirdTitle: "Final Project",
                       currentProgress: "70%",
                       totalProgress: "100%",
                       currentProgressIcon: Icons.check_circle_outline,
                       totalProgressIcon: Icons.assessment,
                       titleIcon: Icons.info_outline,
                     ),
-                    const SizedBox(height: 20),
-
-                    // Recommendations Section
-                    Text(
-                      'Recommendation',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: currentTheme.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 10),
                     const ProgressCard(
-                      title: "Project Progress",
+                      title: "Payments Progress",
+                      secTitle: "Payments Progress",
+                      thirdTitle: "",
                       currentProgress: "70%",
                       totalProgress: "100%",
                       currentProgressIcon: Icons.check_circle_outline,
                       totalProgressIcon: Icons.assessment,
                       titleIcon: Icons.info_outline,
                     ),
-                    const SizedBox(height: 15),
-
-                    // Request Section
-                    Text(
-                      'Request',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: currentTheme.primaryColor,
+                    // const SizedBox(height: 10),
+                    // Text(
+                    //   'Request',
+                    //   style: GoogleFonts.poppins(
+                    //     fontSize: 20,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: currentTheme.primaryColor,
+                    //   ),
+                    // ),
+                    const SizedBox(height: 10),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.4,
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    const ProgressCard(
-                      title: "Project Progress",
-                      currentProgress: "70%",
-                      totalProgress: "100%",
-                      currentProgressIcon: Icons.check_circle_outline,
-                      totalProgressIcon: Icons.assessment,
-                      titleIcon: Icons.info_outline,
+                      child: OldRequestsWidget(
+                        requests: oldRequests,
+                        reqIcon: "dynamic",
+                        onNewRequestTap: () {
+                          _openForm(
+                            context,
+                            user,
+                          ); // Correctly invoke the _openForm method
+                        },
+                        onCheckOldRequestsTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OldRequestsPage()),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -164,6 +190,23 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class OldRequestsPage extends StatelessWidget {
+  const OldRequestsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Old Requests'),
+      ),
+      body: Center(
+        child:
+            const Text('Here, you can handle the old requests page content.'),
       ),
     );
   }

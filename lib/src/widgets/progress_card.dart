@@ -6,6 +6,8 @@ class ProgressCard extends StatelessWidget {
   final String title;
   final String currentProgress;
   final String totalProgress;
+  final String secTitle;
+  final String thirdTitle;
   final IconData currentProgressIcon; // Icon for current progress
   final IconData totalProgressIcon; // Icon for total progress
   final IconData titleIcon; // Icon next to the title
@@ -13,6 +15,8 @@ class ProgressCard extends StatelessWidget {
   const ProgressCard({
     super.key,
     required this.title,
+    required this.secTitle,
+    required this.thirdTitle,
     required this.currentProgress,
     required this.totalProgress,
     required this.currentProgressIcon,
@@ -28,13 +32,6 @@ class ProgressCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: currentTheme.secondaryHeaderColor,
         borderRadius: BorderRadius.circular(16),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey.withOpacity(0.2),
-        //     blurRadius: 1,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +72,7 @@ class ProgressCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Current Progress',
+                        secTitle,
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: currentTheme.primaryColor,
@@ -94,35 +91,39 @@ class ProgressCard extends StatelessWidget {
                 ],
               ),
               // Total Progress Column
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        totalProgressIcon,
-                        color: Colors.grey,
-                        size: 24, // Adjust this size as needed
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Total Progress',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: currentTheme.primaryColor,
+              thirdTitle.isNotEmpty
+                  ? Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              totalProgressIcon,
+                              color: Colors.grey,
+                              size: 24, // Adjust this size as needed
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              thirdTitle,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: currentTheme.primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    totalProgress,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
+                        Text(
+                          totalProgress,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: currentTheme.primaryColor,
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(
+                      width: 1,
                     ),
-                  ),
-                ],
-              ),
             ],
           ),
           const SizedBox(height: 15),
