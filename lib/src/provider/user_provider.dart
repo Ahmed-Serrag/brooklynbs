@@ -22,6 +22,8 @@ class UserStateNotifier extends StateNotifier<UserModel?> {
     await prefs.remove('phone');
     await prefs.remove('ppURL');
     await prefs.remove('isLoggedIn'); // Clear the login flag
+    await prefs.remove('password'); // Clear the login flag
+    await prefs.remove('emailOrId'); // Clear the login flag
   }
 
   bool isLoggedIn() {
