@@ -47,7 +47,8 @@ final ThemeData darkTheme = ThemeData(
   secondaryHeaderColor: const Color(0xFF242526),
   splashColor: Colors.white,
   cardColor: const Color(0xFF1A1A1A), // Slightly lighter dark for cards
-  iconTheme: const IconThemeData(color: Color(0xFF012868)), // Light Icons
+  iconTheme:
+      const IconThemeData(color: Color.fromRGBO(1, 40, 104, 1)), // Light Icons
 
   scaffoldBackgroundColor:
       const Color(0xFF012868), // Dark Grey/Black Background
