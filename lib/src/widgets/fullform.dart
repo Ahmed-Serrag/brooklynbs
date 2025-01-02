@@ -2,10 +2,13 @@ import 'package:clean_one/src/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../services/end_points.dart';
 
 class CompleteForm extends StatefulWidget {
-  final String type; // Accepts "Complain" or "Request"
-  final dynamic user; // User object (adjust type based on your implementation)
+  final String type;
+  final dynamic user;
 
   const CompleteForm({Key? key, required this.type, required this.user})
       : super(key: key);
@@ -17,7 +20,6 @@ class CompleteForm extends StatefulWidget {
 class _CompleteFormState extends State<CompleteForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
-  // Example dropdown options list
   final List<String> dropdownOptions = [
     'Material',
     'Payment',
@@ -28,6 +30,71 @@ class _CompleteFormState extends State<CompleteForm> {
     'Other',
   ];
 
+  Future<void> _submitForm() async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      final formData = _formKey.currentState!.value;
+
+      // Combine form data with user data
+      final requestData = {
+        "data": {
+          "student_num": widget.user.stID, // Example user property
+          "name": widget.user.name,
+          "message": widget.type == 'Complaint'
+              ? formData['complain_details']
+              : formData['request_details'],
+          "type": widget.type,
+          "Email": widget.user.email,
+          "phone": widget.user.phone,
+          "GroupID": formData['selection'],
+        },
+      };
+
+      try {
+        // Post the data to your API endpoint
+        final response = await http.post(
+          Uri.parse(Endpoints.request), // Replace with your API URL
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${Endpoints.reqToken}',
+          },
+          body: jsonEncode(requestData),
+        );
+
+        if (response.statusCode == 200) {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Success'),
+                content: const Text('Your submission was successful!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                      Navigator.pop(context); // Close the form
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Submission failed: ${response.body}')));
+          print('Submission failed: ${response.body} ');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+        print('Error: $e');
+      }
+    } else {
+      debugPrint('Validation failed');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // Fetch theme for consistent styling
@@ -37,7 +104,9 @@ class _CompleteFormState extends State<CompleteForm> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).secondaryHeaderColor,
         title: Text(
-          widget.type == 'Complain' ? 'Submit a Complain' : 'Submit a Request',
+          widget.type == 'Complaint'
+              ? 'Submit a Complaint'
+              : 'Submit a Request',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -64,98 +133,102 @@ class _CompleteFormState extends State<CompleteForm> {
               const SizedBox(height: 20),
 
               // Name Field
-              FormBuilderTextField(
-                name: 'name',
-                initialValue: widget.user.name, // Auto-fill with user name
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  hintText: 'Enter your name',
-                  prefixIcon: const Icon(Icons.person_outline),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: theme.cardColor,
-                ),
-                validator: FormBuilderValidators.required(
-                    errorText: 'Name is required'),
-              ),
+              // FormBuilderTextField(
+              //   name: 'name',
+              //   initialValue: widget.user.name, // Auto-fill with user name
+              //   decoration: InputDecoration(
+              //     labelText: 'Name',
+              //     hintText: 'Enter your name',
+              //     prefixIcon: const Icon(Icons.person_outline),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     filled: true,
+              //     fillColor: theme.cardColor,
+              //   ),
+              //   validator: FormBuilderValidators.required(
+              //       errorText: 'Name is required'),
+              // ),
               const SizedBox(height: 16),
 
               // Student ID Field
-              FormBuilderTextField(
-                name: 'student_id',
-                initialValue: widget.user.stID, // Auto-fill with user ID
-                decoration: InputDecoration(
-                  labelText: 'Student ID',
-                  hintText: 'Enter your student ID',
-                  prefixIcon: const Icon(Icons.credit_card),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: theme.cardColor,
-                ),
-                validator: FormBuilderValidators.required(
-                    errorText: 'Student ID is required'),
-              ),
+              // FormBuilderTextField(
+              //   name: 'student_id',
+              //   initialValue: widget.user.stID, // Auto-fill with user ID
+              //   decoration: InputDecoration(
+              //     labelText: 'Student ID',
+              //     hintText: 'Enter your student ID',
+              //     prefixIcon: const Icon(Icons.credit_card),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     filled: true,
+              //     fillColor: theme.cardColor,
+              //   ),
+              //   validator: FormBuilderValidators.required(
+              //       errorText: 'Student ID is required'),
+              // ),
               const SizedBox(height: 16),
 
               // Email Field
-              FormBuilderTextField(
-                name: 'email',
-                initialValue: widget.user.email, // Auto-fill with user email
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: theme.cardColor,
-                ),
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                      errorText: 'Email is required'),
-                  FormBuilderValidators.email(
-                      errorText: 'Enter a valid email address'),
-                ]),
-              ),
+              // FormBuilderTextField(
+              //   name: 'email',
+              //   initialValue: widget.user.email, // Auto-fill with user email
+              //   decoration: InputDecoration(
+              //     labelText: 'Email',
+              //     hintText: 'Enter your email',
+              //     prefixIcon: const Icon(Icons.email_outlined),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     filled: true,
+              //     fillColor: theme.cardColor,
+              //   ),
+              //   validator: FormBuilderValidators.compose([
+              //     FormBuilderValidators.required(
+              //         errorText: 'Email is required'),
+              //     FormBuilderValidators.email(
+              //         errorText: 'Enter a valid email address'),
+              //   ]),
+              // ),
               const SizedBox(height: 16),
 
               // Phone Field
-              FormBuilderTextField(
-                name: 'phone',
-                initialValue: widget.user.phone, // Auto-fill with user phone
-                decoration: InputDecoration(
-                  labelText: 'Phone',
-                  hintText: 'Enter your phone number',
-                  prefixIcon: const Icon(Icons.phone_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: theme.cardColor,
-                ),
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                      errorText: 'Phone number is required'),
-                  FormBuilderValidators.numeric(
-                      errorText: 'Enter a valid phone number'),
-                  FormBuilderValidators.minLength(10,
-                      errorText: 'Minimum 10 digits required'),
-                ]),
-              ),
-              const SizedBox(height: 16),
+              // FormBuilderTextField(
+              //   name: 'phone',
+              //   initialValue: widget.user.phone, // Auto-fill with user phone
+              //   decoration: InputDecoration(
+              //     labelText: 'Phone',
+              //     hintText: 'Enter your phone number',
+              //     prefixIcon: const Icon(Icons.phone_outlined),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     filled: true,
+              //     fillColor: theme.cardColor,
+              //   ),
+              //   validator: FormBuilderValidators.compose([
+              //     FormBuilderValidators.required(
+              //         errorText: 'Phone number is required'),
+              //     FormBuilderValidators.numeric(
+              //         errorText: 'Enter a valid phone number'),
+              //     FormBuilderValidators.minLength(10,
+              //         errorText: 'Minimum 10 digits required'),
+              //   ]),
+              // ),
+              // const SizedBox(height: 16),
 
               // Dropdown Field
               FormBuilderDropdown<String>(
                 name: 'selection',
+                style: TextStyle(color: theme.textTheme.bodyMedium?.color),
                 decoration: InputDecoration(
-                  labelText: 'Select an Option',
+                  labelText: widget.type == 'Complaint'
+                      ? 'Complaint About'
+                      : 'Request About',
                   filled: true,
-                  fillColor: Colors.white, // Matches the solid white background
+                  fillColor: theme
+                      .secondaryHeaderColor, // Matches the solid white background
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
@@ -176,7 +249,7 @@ class _CompleteFormState extends State<CompleteForm> {
               const SizedBox(height: 16),
 
               // Complain or Request Details Field
-              if (widget.type == 'Complain') ...[
+              if (widget.type == 'Complaint') ...[
                 ElegantMultiLineTextField(
                   name: 'complain_details',
                   labelText: 'Complain Details',
@@ -206,19 +279,7 @@ class _CompleteFormState extends State<CompleteForm> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState?.saveAndValidate() ?? false) {
-                          debugPrint(_formKey.currentState?.value.toString());
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  '${widget.type} Submitted Successfully!'),
-                            ),
-                          );
-                        } else {
-                          debugPrint('Validation failed');
-                        }
-                      },
+                      onPressed: _submitForm,
                       child: const Text(
                         'Submit',
                         style: TextStyle(fontSize: 16),

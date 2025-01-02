@@ -24,7 +24,7 @@ class BookingExamForm extends ConsumerStatefulWidget {
 
 class _BookingExamFormState extends ConsumerState<BookingExamForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-
+  bool _isInitialized = false;
   // Track which steps are completed
   bool _isBranchSelected = false;
   bool _isDateTimeSelected = false;
@@ -32,6 +32,24 @@ class _BookingExamFormState extends ConsumerState<BookingExamForm> {
   String? _selectedBranch;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeGoogleSheets();
+  }
+
+  void _initializeGoogleSheets() async {
+    final success = await BookExamAPI.init();
+    setState(() {
+      _isInitialized = success;
+    });
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to initialize Google Sheets.')),
+      );
+    }
+  }
 
   // Branch-specific availability data
   final Map<String, Map<String, dynamic>> branchAvailability = {
@@ -300,39 +318,42 @@ class _BookingExamFormState extends ConsumerState<BookingExamForm> {
   Widget _buildSubmitButton(dynamic user) {
     return ElevatedButton(
       style: _buttonStyle(),
-      onPressed: () async {
-        if (_formKey.currentState?.saveAndValidate() ?? false) {
-          final formData = _formKey.currentState!.value;
+      onPressed: _isInitialized
+          ? () async {
+              if (_formKey.currentState?.saveAndValidate() ?? false) {
+                final formData = _formKey.currentState!.value;
 
-          if (_selectedBranch == null ||
-              _selectedDate == null ||
-              _selectedTime == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please complete all selections.')),
-            );
-            return;
-          }
+                if (_selectedBranch == null ||
+                    _selectedDate == null ||
+                    _selectedTime == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Please complete all selections.')),
+                  );
+                  return;
+                }
 
-          final row = {
-            BookExam.ID: user.stID.toString(),
-            BookExam.Group: widget.courseCode.toString(),
-            BookExam.Module: widget.courseTitle.toString(),
-            BookExam.Date:
-                '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}',
-            BookExam.Time: '${_selectedTime!.hour}:${_selectedTime!.minute}',
-            BookExam.Branch: _selectedBranch ?? '',
-            BookExam.Notes: formData['notes'] ?? '',
-          };
+                final row = {
+                  BookExam.ID: user.stID.toString(),
+                  BookExam.Group: widget.courseCode.toString(),
+                  BookExam.Module: widget.courseTitle.toString(),
+                  BookExam.Date:
+                      '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}',
+                  BookExam.Time:
+                      '${_selectedTime!.hour}:${_selectedTime!.minute}',
+                  BookExam.Branch: _selectedBranch ?? '',
+                  BookExam.Notes: formData['notes'] ?? '',
+                };
 
-          await BookExamAPI.init();
-          await BookExamAPI.insert([row]);
+                await BookExamAPI.insert([row]);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Exam Booked Successfully!')),
-          );
-          Navigator.pop(context);
-        }
-      },
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Exam Booked Successfully!')),
+                );
+                Navigator.pop(context);
+              }
+            }
+          : null, // Disable button if not initialized
       child: const Text('Submit'),
     );
   }

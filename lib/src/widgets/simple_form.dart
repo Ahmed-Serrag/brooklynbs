@@ -31,7 +31,7 @@ class _SimpleFormState extends State<SimpleForm> {
                 labelText: 'Select Type',
                 border: OutlineInputBorder(),
               ),
-              items: ['Complain', 'Request']
+              items: ['Complaint', 'Request']
                   .map((option) => DropdownMenuItem(
                         value: option,
                         child: Text(option),

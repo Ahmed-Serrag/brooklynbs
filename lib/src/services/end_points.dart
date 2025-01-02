@@ -6,4 +6,8 @@ class Endpoints {
 
   static String forgetPw =
       'https://srm-vbc7.onrender.com/api/m-app-users/forget-passwords';
+
+  static String request = 'https://task-com.onrender.com/api/mobile-requests';
+  static String reqToken =
+      'd2d25b8a0d6f8fa0ebce3488fc1f4dfcd8703b6cc43c48d6ce673428a05a6d36c51ce3af8e8689e5afcb9f00676e9065be21d14760243ce2ac551d67dfd5f73e77aeee80b23a0b922cda371315eb7d3b6fad6b70ee0aa91872caae7c30d0d0485502ad0c37881eecd3b8eeadee651adaed3075ecde115934c16b3e85fc0c2f61';
 }

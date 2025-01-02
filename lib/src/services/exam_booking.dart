@@ -16,21 +16,24 @@ class BookExamAPI {
 }
   ''';
 
-  static const _spreadsheetId =
-      '15pkRA0e56bE5P4wQhxyttreF3vuptnPMf7o2FPO1YnQ'; // Replace with your spreadsheet ID
+  static const _spreadsheetId = '15pkRA0e56bE5P4wQhxyttreF3vuptnPMf7o2FPO1YnQ';
   static final _gsheets = GSheets(_credentials);
   static Worksheet? _worksheet;
 
   // Initialize Google Sheets
-  static Future<void> init() async {
+  static Future<bool> init() async {
     try {
       final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
       _worksheet = await _getWorksheet(spreadsheet, title: 'Book Exam');
       if (_worksheet != null) {
         print('Google Sheets initialized successfully!');
+        return true;
       }
-    } catch (e) {
+      return false;
+    } catch (e, stack) {
       print('Google Sheets initialization error: $e');
+      print('Stack trace: $stack');
+      return false;
     }
   }
 
