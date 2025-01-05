@@ -8,6 +8,7 @@ final ThemeData lightTheme = ThemeData(
 
   primaryColor: const Color(0xFF000000), // Deep Black
   secondaryHeaderColor: const Color(0xFFF2F3F5),
+  canvasColor: const Color.fromRGBO(153, 57, 66, 100),
   splashColor: const Color(0xFF000000),
   scaffoldBackgroundColor: const Color(0xFF012868), // Light Greyish Background
   cardColor: const Color(0xFFFFFFFF),

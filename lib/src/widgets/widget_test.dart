@@ -19,7 +19,7 @@ class OldRequestsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.3, // 60% of screen height
+      height: MediaQuery.of(context).size.height * 0.3, // 30% of screen height
       width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
       decoration: BoxDecoration(
         color: Theme.of(context).secondaryHeaderColor, // Background color
@@ -39,60 +39,72 @@ class OldRequestsWidget extends StatelessWidget {
             softWrap: true,
           ),
           const Divider(
-            color: Colors.grey,
+            color: const Color(0xFF012868),
             thickness: 1.0,
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 1.0),
-              itemCount: requests.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300, // Light background for items
-                      borderRadius: BorderRadius.circular(5), // Rounded corners
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        requests[index]['description']!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.grey[500], // Background color for the box
+                borderRadius: BorderRadius.circular(10), // Rounded corners
+                // border: Border.all(
+                //   color: const Color(0xFF012868), // Border color
+                //   width: 1, // Border thickness
+                // ),
+              ),
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 1.0),
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Light background for items
+                        borderRadius:
+                            BorderRadius.circular(5), // Rounded corners
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          requests[index]['description']!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: reqIcon == "dynamic"
+                              ? requests[index]['status'] == "done"
+                                  ? const Icon(Icons.check_circle_outlined,
+                                      color: Colors.green)
+                                  : const Icon(Icons.watch_later_outlined,
+                                      color: Color.fromARGB(255, 207, 187, 4))
+                              : Icon(
+                                  reqIcon == "done"
+                                      ? Icons.check_circle_outlined
+                                      : Icons.watch_later_outlined,
+                                  color: reqIcon == "done"
+                                      ? Colors.green
+                                      : const Color.fromRGBO(255, 235, 59, 1),
+                                ),
+                          onPressed: () {
+                            // Handle trailing icon tap action
+                          },
                         ),
                       ),
-                      trailing: IconButton(
-                        icon: reqIcon == "dynamic"
-                            ? requests[index]['status'] == "done"
-                                ? const Icon(Icons.check_circle_outlined,
-                                    color: Colors.green)
-                                : const Icon(Icons.watch_later_outlined,
-                                    color: Color.fromARGB(255, 207, 187, 4))
-                            : Icon(
-                                reqIcon == "done"
-                                    ? Icons.check_circle_outlined
-                                    : Icons.watch_later_outlined,
-                                color: reqIcon == "done"
-                                    ? Colors.green
-                                    : Colors.yellow,
-                              ),
-                        onPressed: () {
-                          // Handle trailing icon tap action
-                        },
-                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1.0,
-          ),
+          // const Divider(
+          //   color: Color.fromRGBO(153, 57, 66, 1),
+          //   thickness: 1.0,
+          // ),
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Row(
               children: [
                 Expanded(
@@ -102,15 +114,17 @@ class OldRequestsWidget extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        // Rounded button
                       ),
-                      side: BorderSide(
-                        color: Theme.of(context).primaryColor, // Border color
-                      ),
-                      backgroundColor: Theme.of(context)
-                          .secondaryHeaderColor, // Button color
+                      backgroundColor: const Color(0xFF012868), // Button color
                     ),
-                    child: const Text('New Request'),
+                    child: const Text(
+                      'New Request',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -119,15 +133,20 @@ class OldRequestsWidget extends StatelessWidget {
                     onPressed: onCheckOldRequestsTap,
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(
-                        color: Theme.of(context).primaryColor, // Border color
+                      side: const BorderSide(
+                        color: const Color(0xFF012868), // Border color
                       ),
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(12), // Rounded button
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Check All Requests'),
+                    child: const Text(
+                      'Check All Requests',
+                      style: TextStyle(
+                        color: const Color(0xFF012868),
+                      ),
+                    ),
                   ),
                 ),
               ],

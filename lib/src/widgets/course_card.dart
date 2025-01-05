@@ -32,7 +32,7 @@ class CourseCard extends StatelessWidget {
     final currentTheme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(top: 10),
       margin: const EdgeInsets.symmetric(vertical: 3),
       decoration: BoxDecoration(
         color: currentTheme.secondaryHeaderColor,
@@ -153,11 +153,11 @@ class CourseCard extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            backgroundColor: currentTheme.primaryColor,
+                            backgroundColor: const Color(0xFF012868),
                           ),
                           child: const Text(
                             'Book Exam',
@@ -182,29 +182,34 @@ class CourseCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to BookingExamForm
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BookingExamForm(
-                                  courseTitle: title, // Pass course title
-                                  courseCode: courseCode, // Pass course code
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: 20), // Adjust the value to push it left
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Navigate to BookingExamForm
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookingExamForm(
+                                    courseTitle: title, // Pass course title
+                                    courseCode: courseCode, // Pass course code
+                                  ),
                                 ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              backgroundColor: const Color(0xFF012868),
                             ),
-                            backgroundColor: currentTheme.primaryColor,
-                          ),
-                          child: const Text(
-                            'Book Exam',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            child: const Text(
+                              'Book Exam',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
+                            ),
                           ),
                         ),
                       ],

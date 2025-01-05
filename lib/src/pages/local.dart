@@ -1,11 +1,7 @@
 import 'package:clean_one/src/model/user_model.dart';
-import 'package:clean_one/src/pages/course.dart';
-import 'package:clean_one/src/pages/payment.dart';
-import 'package:clean_one/src/widgets/fullform.dart';
 import 'package:clean_one/src/widgets/popup_dialog.dart';
 import 'package:clean_one/src/widgets/progress_card.dart';
 import 'package:clean_one/src/widgets/request.dart';
-import 'package:clean_one/src/widgets/simple_form.dart';
 import 'package:clean_one/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +20,19 @@ class HomePage extends ConsumerWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return CombinedForm(user: user); // Use CombinedForm
+        return DraggableScrollableSheet(
+          initialChildSize: 0.4, // 50% of screen height initially
+          minChildSize: 0.3, // Minimum height of the modal
+          maxChildSize: 0.9, // Maximum height of the modal
+          expand: false, // Allows the sheet to expand or shrink
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: CombinedForm(user: user), // Your form content
+            );
+          },
+        );
+        // Use CombinedForm
       },
     );
   }

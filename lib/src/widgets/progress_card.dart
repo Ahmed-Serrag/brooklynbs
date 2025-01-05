@@ -53,7 +53,8 @@ class ProgressCard extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   titleIcon,
-                  color: currentTheme.primaryColor, // Use theme color
+                  color:
+                      const Color.fromRGBO(153, 57, 66, 1), // Use theme color
                   size: 24, // Adjust size
                 ),
                 onPressed: onTitleIconPressed, // Trigger navigation
@@ -71,7 +72,7 @@ class ProgressCard extends StatelessWidget {
                     children: [
                       Icon(
                         currentProgressIcon,
-                        color: Colors.grey,
+                        color: const Color.fromRGBO(153, 57, 66, 1),
                         size: 24, // Adjust this size as needed
                       ),
                       const SizedBox(width: 8),
@@ -102,7 +103,7 @@ class ProgressCard extends StatelessWidget {
                           children: [
                             Icon(
                               totalProgressIcon,
-                              color: Colors.grey,
+                              color: const Color.fromRGBO(153, 57, 66, 1),
                               size: 24, // Adjust this size as needed
                             ),
                             const SizedBox(width: 8),
@@ -137,7 +138,7 @@ class ProgressCard extends StatelessWidget {
                 height: 30,
                 width: constraints.maxWidth, // Use the full width of the card
                 backgroundColor: Colors.grey.shade300,
-                foregrondColor: const Color(0xFF3BBAFF),
+                foregrondColor: const Color(0xFF012868),
                 ratio: 0.5, // Set your progress ratio here
                 direction: Axis.horizontal,
                 curve: Curves.fastLinearToSlowEaseIn,
