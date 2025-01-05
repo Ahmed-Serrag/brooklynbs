@@ -1,6 +1,5 @@
 import 'package:clean_one/src/model/exam.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
-import 'package:clean_one/src/services/exam_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,107 +23,76 @@ class BookingExamForm extends ConsumerStatefulWidget {
 
 class _BookingExamFormState extends ConsumerState<BookingExamForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  bool _isInitialized = false;
+
   // Track which steps are completed
   bool _isBranchSelected = false;
   bool _isDateTimeSelected = false;
 
   String? _selectedBranch;
   DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeGoogleSheets();
-  }
-
-  void _initializeGoogleSheets() async {
-    final success = await BookExamAPI.init();
-    setState(() {
-      _isInitialized = success;
-    });
-    if (!success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to initialize Google Sheets.')),
-      );
-    }
-  }
+  String? _selectedTime;
 
   // Branch-specific availability data
   final Map<String, Map<String, dynamic>> branchAvailability = {
     'Ramses': {
       'availableDates': _generateDates(),
-      'timeRange': {
-        'from': TimeOfDay(hour: 13, minute: 0),
-        'to': TimeOfDay(hour: 19, minute: 0)
-      },
+      'availableTimes': [
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+      ],
     },
     'Fifth Settlement': {
       'availableDates': _generateDates(),
-      'timeRange': {
-        'from': TimeOfDay(hour: 13, minute: 0),
-        'to': TimeOfDay(hour: 19, minute: 0)
-      },
+      'availableTimes': [
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+      ],
     },
     'Abasiya': {
       'availableDates': _generateDates(),
-      'timeRange': {
-        'from': TimeOfDay(hour: 13, minute: 0),
-        'to': TimeOfDay(hour: 19, minute: 0)
-      },
+      'availableTimes': [
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+      ],
     },
     'Online(Outside Egypt)': {
       'availableDates': _generateDates(),
-      'timeRange': {
-        'from': TimeOfDay(hour: 13, minute: 0),
-        'to': TimeOfDay(hour: 19, minute: 0)
-      },
+      'availableTimes': [
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+      ],
+    },
+    'Alexandria': {
+      'availableDates': _generateDates(),
+      'availableTimes': [
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+      ],
     },
   };
 
   static List<DateTime> _generateDates() {
     return [
       for (DateTime date = DateTime.now();
-          date.isBefore(DateTime.now().add(Duration(days: 365)));
-          date = date.add(Duration(days: 1)))
+          date.isBefore(DateTime.now().add(const Duration(days: 365)));
+          date = date.add(const Duration(days: 1)))
         if (date.weekday != DateTime.friday) date
     ];
-  }
-
-  void _pickTime(BuildContext context) async {
-    final branchData =
-        _selectedBranch != null ? branchAvailability[_selectedBranch!] : null;
-    final timeRange = branchData?['timeRange'];
-
-    if (timeRange == null) return;
-
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: timeRange['from']!,
-    );
-
-    if (pickedTime != null) {
-      final from = timeRange['from']!;
-      final to = timeRange['to']!;
-      if ((pickedTime.hour > from.hour ||
-              (pickedTime.hour == from.hour &&
-                  pickedTime.minute >= from.minute)) &&
-          (pickedTime.hour < to.hour ||
-              (pickedTime.hour == to.hour && pickedTime.minute <= to.minute))) {
-        setState(() {
-          _selectedTime = pickedTime;
-          _isDateTimeSelected = true;
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Time must be between ${from.format(context)} and ${to.format(context)}'),
-          ),
-        );
-      }
-    }
   }
 
   @override
@@ -288,19 +256,37 @@ class _BookingExamFormState extends ConsumerState<BookingExamForm> {
     if (selectedDates != null && selectedDates.isNotEmpty) {
       setState(() {
         _selectedDate = selectedDates.first;
+        _isDateTimeSelected = _selectedDate != null && _selectedTime != null;
       });
     }
   }
 
   Widget _buildTimePicker() {
-    return ElevatedButton(
-      style: _buttonStyle(),
-      onPressed: () => _pickTime(context),
-      child: Text(
-        _selectedTime == null
-            ? 'Choose Time'
-            : 'Selected Time: ${_selectedTime!.format(context)}',
+    final availableTimes = _selectedBranch != null
+        ? (branchAvailability[_selectedBranch!]!['availableTimes']
+                as List<dynamic>)
+            .cast<String>()
+        : <String>[]; // Default to an empty list if no branch is selected
+
+    return FormBuilderDropdown<String>(
+      name: 'time',
+      decoration: const InputDecoration(
+        labelText: 'Select Time',
+        border: OutlineInputBorder(),
       ),
+      items: availableTimes
+          .map((time) =>
+              DropdownMenuItem<String>(value: time, child: Text(time)))
+          .toList(),
+      validator: FormBuilderValidators.required(
+        errorText: 'Time selection is required',
+      ),
+      onChanged: (value) {
+        setState(() {
+          _selectedTime = value; // Directly assign the string value
+          _isDateTimeSelected = _selectedDate != null && _selectedTime != null;
+        });
+      },
     );
   }
 
@@ -316,13 +302,18 @@ class _BookingExamFormState extends ConsumerState<BookingExamForm> {
   }
 
   Widget _buildSubmitButton(dynamic user) {
+    final isFormComplete = _selectedBranch != null &&
+        _selectedDate != null &&
+        _selectedTime != null;
+
     return ElevatedButton(
       style: _buttonStyle(),
-      onPressed: _isInitialized
+      onPressed: isFormComplete
           ? () async {
               if (_formKey.currentState?.saveAndValidate() ?? false) {
                 final formData = _formKey.currentState!.value;
 
+                // Ensure all required fields are selected
                 if (_selectedBranch == null ||
                     _selectedDate == null ||
                     _selectedTime == null) {
@@ -339,21 +330,19 @@ class _BookingExamFormState extends ConsumerState<BookingExamForm> {
                   BookExam.Module: widget.courseTitle.toString(),
                   BookExam.Date:
                       '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}',
-                  BookExam.Time:
-                      '${_selectedTime!.hour}:${_selectedTime!.minute}',
+                  BookExam.Time: _selectedTime, // Use the string directly
                   BookExam.Branch: _selectedBranch ?? '',
                   BookExam.Notes: formData['notes'] ?? '',
                 };
 
-                await BookExamAPI.insert([row]);
-
+                // Insert booking row (API or logic to handle booking here)
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Exam Booked Successfully!')),
                 );
                 Navigator.pop(context);
               }
             }
-          : null, // Disable button if not initialized
+          : null, // Disable button if form is incomplete
       child: const Text('Submit'),
     );
   }

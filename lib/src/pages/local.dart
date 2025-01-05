@@ -1,7 +1,10 @@
 import 'package:clean_one/src/model/user_model.dart';
+import 'package:clean_one/src/pages/course.dart';
+import 'package:clean_one/src/pages/payment.dart';
 import 'package:clean_one/src/widgets/fullform.dart';
 import 'package:clean_one/src/widgets/popup_dialog.dart';
 import 'package:clean_one/src/widgets/progress_card.dart';
+import 'package:clean_one/src/widgets/request.dart';
 import 'package:clean_one/src/widgets/simple_form.dart';
 import 'package:clean_one/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +24,7 @@ class HomePage extends ConsumerWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return SimpleForm(
-          onSubmit: (selectedOption) {
-            Navigator.of(context).pop(); // Close the modal
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CompleteForm(
-                  type: selectedOption,
-                  user: user,
-                ),
-              ),
-            );
-          },
-        );
+        return CombinedForm(user: user); // Use CombinedForm
       },
     );
   }
@@ -41,8 +32,6 @@ class HomePage extends ConsumerWidget {
   final List<Map<String, String>> oldRequests = [
     {'description': 'Request 1: Lorem', 'status': 'done'},
     {'description': 'Complain 1: Dolor', 'status': 'waiting'},
-    {'description': 'Request 2: Consectetur', 'status': 'done'},
-    {'description': 'Request 3: Sed Do', 'status': 'waiting'},
   ];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -131,7 +120,7 @@ class HomePage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const ProgressCard(
+                    ProgressCard(
                       title: "Course Progress",
                       secTitle: "Course Progress",
                       thirdTitle: "Final Project",
@@ -140,9 +129,13 @@ class HomePage extends ConsumerWidget {
                       currentProgressIcon: Icons.check_circle_outline,
                       totalProgressIcon: Icons.assessment,
                       titleIcon: Icons.info_outline,
+                      onTitleIconPressed: () {
+                        // Navigate to the CoursesPage
+                        ref.read(selectedIndexProvider.notifier).state = 1;
+                      },
                     ),
                     const SizedBox(height: 10),
-                    const ProgressCard(
+                    ProgressCard(
                       title: "Payments Progress",
                       secTitle: "Payments Progress",
                       thirdTitle: "",
@@ -151,6 +144,10 @@ class HomePage extends ConsumerWidget {
                       currentProgressIcon: Icons.check_circle_outline,
                       totalProgressIcon: Icons.assessment,
                       titleIcon: Icons.info_outline,
+                      onTitleIconPressed: () {
+                        // Navigate to the CoursesPage
+                        ref.read(selectedIndexProvider.notifier).state = 2;
+                      },
                     ),
                     // const SizedBox(height: 10),
                     // Text(

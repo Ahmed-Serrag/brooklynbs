@@ -25,7 +25,7 @@ class OldRequestsWidget extends StatelessWidget {
         color: Theme.of(context).secondaryHeaderColor, // Background color
         borderRadius: BorderRadius.circular(20), // Rounded corners
       ),
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,6 +38,10 @@ class OldRequestsWidget extends StatelessWidget {
             ),
             softWrap: true,
           ),
+          const Divider(
+            color: Colors.grey,
+            thickness: 1.0,
+          ),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 1.0),
@@ -48,8 +52,7 @@ class OldRequestsWidget extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300, // Light background for items
-                      borderRadius:
-                          BorderRadius.circular(12), // Rounded corners
+                      borderRadius: BorderRadius.circular(5), // Rounded corners
                     ),
                     child: ListTile(
                       title: Text(

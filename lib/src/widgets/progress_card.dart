@@ -11,6 +11,7 @@ class ProgressCard extends StatelessWidget {
   final IconData currentProgressIcon; // Icon for current progress
   final IconData totalProgressIcon; // Icon for total progress
   final IconData titleIcon; // Icon next to the title
+  final VoidCallback onTitleIconPressed; // Callback for title icon press
 
   const ProgressCard({
     super.key,
@@ -21,14 +22,15 @@ class ProgressCard extends StatelessWidget {
     required this.totalProgress,
     required this.currentProgressIcon,
     required this.totalProgressIcon,
-    required this.titleIcon, // Add the title icon parameter
+    required this.titleIcon,
+    required this.onTitleIconPressed, // Add this parameter
   });
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: currentTheme.secondaryHeaderColor,
         borderRadius: BorderRadius.circular(16),
@@ -48,15 +50,17 @@ class ProgressCard extends StatelessWidget {
                   color: currentTheme.primaryColor,
                 ),
               ),
-              Icon(
-                titleIcon,
-                color: currentTheme
-                    .primaryColor, // You can change this to any color you like
-                size: 24, // Adjust this size based on the image reference
+              IconButton(
+                icon: Icon(
+                  titleIcon,
+                  color: currentTheme.primaryColor, // Use theme color
+                  size: 24, // Adjust size
+                ),
+                onPressed: onTitleIconPressed, // Trigger navigation
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -121,7 +125,7 @@ class ProgressCard extends StatelessWidget {
                         ),
                       ],
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       width: 1,
                     ),
             ],
@@ -133,7 +137,7 @@ class ProgressCard extends StatelessWidget {
                 height: 30,
                 width: constraints.maxWidth, // Use the full width of the card
                 backgroundColor: Colors.grey.shade300,
-                foregrondColor: Color(0xFF3BBAFF),
+                foregrondColor: const Color(0xFF3BBAFF),
                 ratio: 0.5, // Set your progress ratio here
                 direction: Axis.horizontal,
                 curve: Curves.fastLinearToSlowEaseIn,
