@@ -32,6 +32,13 @@ final ThemeData lightTheme = ThemeData(
       const TextStyle(color: Colors.white),
     ),
   ),
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: const Color(0xFF000000), // Light text color on buttons
+      backgroundColor: const Color(0xFFF2F3F5), // Gold button color
+    ),
+  ),
   colorScheme: ColorScheme.fromSwatch(
     primarySwatch: Colors.blue, // You can customize this as needed
   ).copyWith(
@@ -69,7 +76,7 @@ final ThemeData darkTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       foregroundColor: const Color(0xFFF0F0F0), // Light text color on buttons
-      backgroundColor: const Color(0xFFD4AF37), // Gold button color
+      backgroundColor: const Color(0xFF242526), // Gold button color
     ),
   ),
   colorScheme: ColorScheme.fromSwatch(

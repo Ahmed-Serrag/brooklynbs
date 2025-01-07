@@ -50,6 +50,7 @@ dependencies:
   material_dialogs: ^1.1.5
   on_popup_window_widget: ^0.0.13
   percent_indicator: ^4.2.4
+  phone_form_field: ^10.0.3
   riverpod_annotation: ^2.6.1
   shared_preferences: ^2.3.3
   simple_animation_progress_bar: ^1.8.2
