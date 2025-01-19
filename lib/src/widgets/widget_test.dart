@@ -19,8 +19,8 @@ class OldRequestsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.3, // 30% of screen height
-      width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+      // height: MediaQuery.of(context).size.height * 0.3, // 30% of screen height
+      // width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
       decoration: BoxDecoration(
         color: Theme.of(context).secondaryHeaderColor, // Background color
         borderRadius: BorderRadius.circular(20), // Rounded corners
@@ -42,63 +42,71 @@ class OldRequestsWidget extends StatelessWidget {
             color: const Color(0xFF012868),
             thickness: 1.0,
           ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.grey[500], // Background color for the box
-                borderRadius: BorderRadius.circular(10), // Rounded corners
-                // border: Border.all(
-                //   color: const Color(0xFF012868), // Border color
-                //   width: 1, // Border thickness
-                // ),
-              ),
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 1.0),
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Light background for items
-                        borderRadius:
-                            BorderRadius.circular(5), // Rounded corners
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          requests[index]['description']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: reqIcon == "dynamic"
-                              ? requests[index]['status'] == "done"
-                                  ? const Icon(Icons.check_circle_outlined,
-                                      color: Colors.green)
-                                  : const Icon(Icons.watch_later_outlined,
-                                      color: Color.fromARGB(255, 207, 187, 4))
-                              : Icon(
-                                  reqIcon == "done"
-                                      ? Icons.check_circle_outlined
-                                      : Icons.watch_later_outlined,
-                                  color: reqIcon == "done"
-                                      ? Colors.green
-                                      : const Color.fromRGBO(255, 235, 59, 1),
-                                ),
-                          onPressed: () {
-                            // Handle trailing icon tap action
-                          },
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+          Text(
+            'Got a Request? ',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              color: Theme.of(context).primaryColor,
             ),
+            // softWrap: true,
           ),
+          // Expanded(
+          //   child: Container(
+          //     padding: EdgeInsets.all(5),
+          //     decoration: BoxDecoration(
+          //       color: Colors.grey[500], // Background color for the box
+          //       borderRadius: BorderRadius.circular(10), // Rounded corners
+          //       // border: Border.all(
+          //       //   color: const Color(0xFF012868), // Border color
+          //       //   width: 1, // Border thickness
+          //       // ),
+          //     ),
+          //     child: ListView.builder(
+          //       padding: const EdgeInsets.symmetric(vertical: 1.0),
+          //       itemCount: requests.length,
+          //       itemBuilder: (context, index) {
+          //         return Padding(
+          //           padding: const EdgeInsets.symmetric(vertical: 1.0),
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //               color: Colors.white, // Light background for items
+          //               borderRadius:
+          //                   BorderRadius.circular(5), // Rounded corners
+          //             ),
+          //             child: ListTile(
+          //               title: Text(
+          //                 requests[index]['description']!,
+          //                 style: const TextStyle(
+          //                   fontWeight: FontWeight.w500,
+          //                   fontSize: 16,
+          //                 ),
+          //               ),
+          //               trailing: IconButton(
+          //                 icon: reqIcon == "dynamic"
+          //                     ? requests[index]['status'] == "done"
+          //                         ? const Icon(Icons.check_circle_outlined,
+          //                             color: Colors.green)
+          //                         : const Icon(Icons.watch_later_outlined,
+          //                             color: Color.fromARGB(255, 207, 187, 4))
+          //                     : Icon(
+          //                         reqIcon == "done"
+          //                             ? Icons.check_circle_outlined
+          //                             : Icons.watch_later_outlined,
+          //                         color: reqIcon == "done"
+          //                             ? Colors.green
+          //                             : const Color.fromRGBO(255, 235, 59, 1),
+          //                       ),
+          //                 onPressed: () {
+          //                   // Handle trailing icon tap action
+          //                 },
+          //               ),
+          //             ),
+          //           ),
+          //         );
+          //       },
+          //     ),
+          //   ),
+          // ),
           // const Divider(
           //   color: Color.fromRGBO(153, 57, 66, 1),
           //   thickness: 1.0,

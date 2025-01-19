@@ -72,7 +72,7 @@ class ProgressCard extends StatelessWidget {
                     children: [
                       Icon(
                         currentProgressIcon,
-                        color: const Color.fromRGBO(153, 57, 66, 1),
+                        color: currentTheme.primaryColor,
                         size: 24, // Adjust this size as needed
                       ),
                       const SizedBox(width: 8),
@@ -103,7 +103,7 @@ class ProgressCard extends StatelessWidget {
                           children: [
                             Icon(
                               totalProgressIcon,
-                              color: const Color.fromRGBO(153, 57, 66, 1),
+                              color: currentTheme.primaryColor,
                               size: 24, // Adjust this size as needed
                             ),
                             const SizedBox(width: 8),

@@ -13,26 +13,44 @@ class HomePage extends ConsumerWidget {
   HomePage({super.key});
 
   void _openForm(BuildContext context, UserModel user) {
-    showModalBottomSheet(
+    showGeneralDialog(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.4, // 50% of screen height initially
-          minChildSize: 0.3, // Minimum height of the modal
-          maxChildSize: 0.9, // Maximum height of the modal
-          expand: false, // Allows the sheet to expand or shrink
-          builder: (BuildContext context, ScrollController scrollController) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              child: CombinedForm(user: user), // Your form content
-            );
-          },
+      barrierDismissible: true, // Allow dismissal by tapping outside
+      barrierLabel: "Request Form",
+      transitionDuration:
+          const Duration(milliseconds: 300), // Animation duration
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Material(
+            color: Colors.transparent, // Background is transparent
+            child: AnimatedContainer(
+              duration:
+                  const Duration(milliseconds: 300), // Animation for resizing
+              curve: Curves.easeInOut,
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height *
+                    0.3, // Start at 30% height
+                maxHeight: MediaQuery.of(context).size.height *
+                    0.9, // Limit to 90% height
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).secondaryHeaderColor,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              child: CombinedForm(user: user),
+            ),
+          ),
         );
-        // Use CombinedForm
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1), // Start off-screen at the bottom
+            end: Offset.zero, // Slide into view
+          ).animate(animation),
+          child: child,
+        );
       },
     );
   }
@@ -167,27 +185,22 @@ class HomePage extends ConsumerWidget {
                     //   ),
                     // ),
                     const SizedBox(height: 10),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * 0.4,
-                      ),
-                      child: OldRequestsWidget(
-                        requests: oldRequests,
-                        reqIcon: "dynamic",
-                        onNewRequestTap: () {
-                          _openForm(
-                            context,
-                            user,
-                          ); // Correctly invoke the _openForm method
-                        },
-                        onCheckOldRequestsTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const OldRequestsPage()),
-                          );
-                        },
-                      ),
+                    OldRequestsWidget(
+                      requests: oldRequests,
+                      reqIcon: "dynamic",
+                      onNewRequestTap: () {
+                        _openForm(
+                          context,
+                          user,
+                        ); // Correctly invoke the _openForm method
+                      },
+                      onCheckOldRequestsTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const OldRequestsPage()),
+                        );
+                      },
                     ),
                   ],
                 ),

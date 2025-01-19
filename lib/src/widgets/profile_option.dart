@@ -25,7 +25,7 @@ class ProfileOption extends StatelessWidget {
           color: Theme.of(context).secondaryHeaderColor,
         ),
         child: ListTile(
-          leading: Icon(icon, color: const Color.fromRGBO(153, 57, 66, 1)),
+          leading: Icon(icon, color: Theme.of(context).primaryColor),
           title: Text(
             title,
             style: GoogleFonts.poppins(

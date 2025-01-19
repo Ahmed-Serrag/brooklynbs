@@ -130,14 +130,21 @@ class ProfilePage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 7),
-            const ProfileOption(
-                icon: Icons.info, title: 'About Brooklyn Academy'),
+            ProfileOption(
+                icon: Icons.info,
+                title: 'About Brooklyn Academy',
+                onTap: () {
+                  CustomBottomDialog.showBrooklynBusinessSchoolDialog(
+                      context: context);
+                  ;
+                }),
             ProfileOption(
                 icon: Icons.description,
                 title: 'Terms and Conditions',
                 onTap: () {
-                  CustomBottomDialog.showTermsAndConditions(
-                      context: context, title: 'Hello world');
+                  CustomBottomDialog.showBrooklynBusinessSchoolDialog(
+                      context: context);
+                  ;
                 }),
           ],
         ),
