@@ -8,6 +8,7 @@ final ThemeData lightTheme = ThemeData(
 
   primaryColor: const Color(0xFF000000), // Deep Black
   secondaryHeaderColor: const Color(0xFFF2F3F5),
+  primaryColorLight: Color(0xFF012868),
   canvasColor: const Color.fromRGBO(153, 57, 66, 100),
   splashColor: const Color(0xFF000000),
   scaffoldBackgroundColor: const Color(0xFF012868), // Light Greyish Background
@@ -53,6 +54,7 @@ final ThemeData darkTheme = ThemeData(
 
   primaryColor: const Color(0xFFE4E6EB), // Gold Accent
   secondaryHeaderColor: const Color(0xFF242526),
+  primaryColorLight: Colors.white,
   splashColor: Colors.white,
   cardColor: const Color(0xFF1A1A1A), // Slightly lighter dark for cards
   iconTheme:

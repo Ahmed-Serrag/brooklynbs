@@ -1,7 +1,7 @@
-import 'package:clean_one/src/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clean_one/src/services/auth.dart';
+import 'package:clean_one/src/pages/home.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -13,8 +13,7 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _idController =
-      TextEditingController(); // For the dialog input
+  final TextEditingController _idController = TextEditingController();
   bool _isLoading = false;
 
   Future<void> _handleLogin() async {
@@ -28,17 +27,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
-    // final emailRegExp =
-    //     RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-    // if (!emailRegExp.hasMatch(email)) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Invalid email format')),
-    //   );
-    //   return;
-    // }
-
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
     });
 
     final errorMessage = await AuthService().login(
@@ -47,6 +37,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ref: ref,
     );
 
+    setState(() {
+      _isLoading = false;
+    });
+
     if (errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
@@ -54,14 +48,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     } else {
       // After login, navigate to home page
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (_) => const HomePageWithNav()),
       );
     }
   }
 
-  // Method to show the custom dialog
   void _showForgotPasswordDialog() {
     showDialog(
       context: context,
@@ -84,9 +76,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 final id = _idController.text.trim();
                 if (id.isNotEmpty) {
                   sendPasswordToUserEmail(id);
-                  // Call a service to send a reset email to the provided ID
-                  // For now, you can print it or handle it according to your logic
-                  // AuthService().sendPasswordResetEmail(id);
                   Navigator.of(context).pop(); // Close the dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Password reset email sent!')),
@@ -105,15 +94,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
+  bool _isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFE4E6EB),
+      resizeToAvoidBottomInset:
+          true, // Adjust content when the keyboard is open
+      backgroundColor:
+          Theme.of(context).dialogBackgroundColor, // Background color
       body: SafeArea(
         child: Column(
           children: [
-            // Upper Section (Logo and Title)
+            // Logo Section (Fixed)
             Container(
               padding: const EdgeInsets.all(16.0),
               child: const Column(
@@ -137,85 +130,133 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
 
-            // Lower Section (Pop-Up Card)
+            // White container for Login Form and Footer
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
                 child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFB0B1B2),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3), // Shadow position
+                      ),
+                    ],
                   ),
-                  padding: const EdgeInsets.only(left: 25, right: 25, top: 20),
                   child: Column(
                     children: [
-                      // Email Field with Box Border
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: const Color(0xFFE4E6EB),
-                            width: 1,
+                      // Email Field
+                      TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context)
+                              .secondaryHeaderColor, // Subtle background color
+                          labelText: 'Email or ID', // Elegant label text
+                          labelStyle: TextStyle(
+                            color: Theme.of(context)
+                                .primaryColorLight, // Use main text color
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
+                          hintText:
+                              'Enter your email or ID', // Elegant hint text
+                          hintStyle: TextStyle(
+                            color: Theme.of(context).primaryColorLight,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color:
+                                  Color(0xFFB0BEC5), // Light, soft border color
+                              width:
+                                  1.5, // Slightly thinner border for elegance
                             ),
-                          ],
+                            borderRadius: BorderRadius.circular(
+                                12), // Refined rounded corners
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(
+                                  0xFF012868), // Focused color to stand out
+                              width: 2.5, // Slightly thicker on focus
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                12), // Consistent corner radius
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 12),
                         ),
-                        child: TextField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            prefixIcon:
-                                Icon(Icons.email, color: Color(0xFF012868)),
-                            hintText: "Email or ID",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 18),
+                      ),
+                      const SizedBox(height: 16),
+
+// Password Field
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: _isPasswordVisible,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context)
+                              .secondaryHeaderColor, // Subtle background color
+                          labelText: 'Password', // Elegant label text
+                          labelStyle: TextStyle(
+                            color: Theme.of(context)
+                                .primaryColorLight, // Main text color
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                          hintText: 'Enter your password', // Elegant hint text
+                          hintStyle: TextStyle(
+                            color: Theme.of(context).primaryColorLight,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color:
+                                  Color(0xFFB0BEC5), // Light, soft border color
+                              width:
+                                  1.5, // Slightly thinner border for elegance
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(
+                                  0xFF012868), // Focused color to stand out
+                              width: 2.5, // Slightly thicker on focus
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                12), // Consistent corner radius
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 12),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),
 
-                      // Password Field with Box Border
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 30),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            prefixIcon:
-                                Icon(Icons.lock, color: Color(0xFF012868)),
-                            hintText: "Password",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 18),
-                          ),
-                        ),
-                      ),
+                      const SizedBox(height: 20),
 
                       // Sign In Button
                       GestureDetector(
@@ -224,13 +265,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           width: double.infinity,
                           height: 50,
                           decoration: BoxDecoration(
+                            color: const Color(0xFF012868),
                             borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF012868),
-                                Color(0xFF012868),
-                              ],
-                            ),
                           ),
                           child: Center(
                             child: _isLoading
@@ -241,44 +277,40 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 : const Text(
                                     "Sign In",
                                     style: TextStyle(
-                                      color: Color(0xFFFFFFFF),
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
 
-                      // Forget Password Link
+                      // Forgot Password Link
                       GestureDetector(
                         onTap: _showForgotPasswordDialog,
-                        child: const Text(
+                        child: Text(
                           'Forgot Password?',
                           style: TextStyle(
-                            color: Color(0xFF012868),
+                            color: Theme.of(context).primaryColorLight,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-
-                      // Footer
-                      const Text(
+                      SizedBox(height: 20),
+                      Text(
                         'Copyright 2024',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white,
+                          color: Colors.grey,
                         ),
                       ),
-                      const Text(
+                      Text(
                         '© Brooklyn Academy',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white,
+                          color: Colors.grey,
                         ),
                       ),
                     ],

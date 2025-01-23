@@ -30,7 +30,7 @@ class HomePage extends ConsumerWidget {
               curve: Curves.easeInOut,
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height *
-                    0.3, // Start at 30% height
+                    0.5, // Start at 30% height
                 maxHeight: MediaQuery.of(context).size.height *
                     0.9, // Limit to 90% height
               ),
