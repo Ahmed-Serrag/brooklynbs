@@ -191,10 +191,35 @@ class PaymentDetailPage extends StatelessWidget {
             const SizedBox(height: 20),
             if (status == 'unpaid' || status == 'Portion Paid')
               ElevatedButton(
-                onPressed: () {
-                  // You can implement the functionality to pay here
-                  // For example, you can show a payment form or button.
+                onPressed: () async {
+                  final result = await PaymobSdk.payWithPaymob(
+                    publicKey:
+                        'pk_test_1234567890abcdef', // Replace with your test/live public key
+                    clientSecret:
+                        'sk_test_1234567890abcdef', // Replace with your test/live client secret
+                    amount: 150.0, // Example: 150 EGP
+                    currency: 'EGP', // Currency code
+                    orderId: 'ORDER67890', // Unique order ID
+                    appName: 'My Flutter App',
+                    buttonBackgroundColor: 0xFF6200EE, // Purple color
+                    buttonTextColor: 0xFFFFFFFF, // White color
+                    saveCardDefault: false,
+                    showSaveCard: true,
+                  );
+
+                  if (result == "Successful") {
+                    print("Payment was successful!");
+                  } else if (result == "Rejected") {
+                    print("Payment was rejected.");
+                  } else if (result == "Pending") {
+                    print("Payment is pending.");
+                  } else {
+                    print("Unknown payment result: $result");
+                  }
                 },
+                // You can implement the functionality to pay here
+                // For example, you can show a payment form or button.
+
                 child: const Text('Pay Now'),
               ),
           ],
