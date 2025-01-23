@@ -1,7 +1,9 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:clean_one/src/model/user_model.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
 import 'package:clean_one/src/widgets/fourm_complain.dart';
 import 'package:clean_one/src/widgets/profile_option.dart';
+import 'package:clean_one/src/widgets/theme_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -113,6 +115,7 @@ class ProfilePage extends ConsumerWidget {
                   onTap: () => _openForm(context, user),
                 ),
                 ProfileOption(icon: Icons.person, title: 'ID: ${user.stID}'),
+                const ThemeToggleOption(),
                 ProfileOption(
                   icon: Icons.logout_rounded,
                   title: 'Log Out',
