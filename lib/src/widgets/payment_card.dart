@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:clean_one/src/services/paymob.dart';
 
 class TransactionItem extends StatelessWidget {
   final String title;
@@ -192,34 +193,20 @@ class PaymentDetailPage extends StatelessWidget {
             if (status == 'unpaid' || status == 'Portion Paid')
               ElevatedButton(
                 onPressed: () async {
-                  final result = await PaymobSdk.payWithPaymob(
-                    publicKey:
-                        'pk_test_1234567890abcdef', // Replace with your test/live public key
-                    clientSecret:
-                        'sk_test_1234567890abcdef', // Replace with your test/live client secret
-                    amount: 150.0, // Example: 150 EGP
-                    currency: 'EGP', // Currency code
-                    orderId: 'ORDER67890', // Unique order ID
-                    appName: 'My Flutter App',
-                    buttonBackgroundColor: 0xFF6200EE, // Purple color
-                    buttonTextColor: 0xFFFFFFFF, // White color
-                    saveCardDefault: false,
+                  // Call the method without expecting a direct result
+                  await _payWithPaymob(
+                    "your_public_key",
+                    "your_client_secret",
+                    appName: "YourApp",
+                    buttonBackgroundColor: Colors.blue,
+                    buttonTextColor: Colors.white,
+                    saveCardDefault: true,
                     showSaveCard: true,
                   );
 
-                  if (result == "Successful") {
-                    print("Payment was successful!");
-                  } else if (result == "Rejected") {
-                    print("Payment was rejected.");
-                  } else if (result == "Pending") {
-                    print("Payment is pending.");
-                  } else {
-                    print("Unknown payment result: $result");
-                  }
+                  // If needed, follow-up actions after the call
+                  print("Payment process invoked");
                 },
-                // You can implement the functionality to pay here
-                // For example, you can show a payment form or button.
-
                 child: const Text('Pay Now'),
               ),
           ],

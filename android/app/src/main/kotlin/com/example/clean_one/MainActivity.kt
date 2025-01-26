@@ -35,23 +35,13 @@ class MainActivity: FlutterActivity(), MethodCallHandler, PaymobSdkListener {
         val arguments = call.arguments as? Map<String, Any>
         val publicKey = call.argument<String>("publicKey")
         val clientSecret = call.argument<String>("clientSecret")
-        val savedBankCard = arguments?.get("savedBankCard") as? Map<String, Any>
-        var savedCard: SavedCard? = null
         var buttonBackgroundColor: Int? = null
         var buttonTextColor: Int? = null
         val appName = call.argument<String>("appName")
         val buttonBackgroundColorData = call.argument<Number>("buttonBackgroundColor")?.toInt() ?: 0
         val buttonTextColorData = call.argument<Number>("buttonTextColor")?.toInt() ?: 0
-        val saveCardDefault = call.argument<Boolean>("saveCardDefault") ?: false
-        val showSaveCard = call.argument<Boolean>("showSaveCard") ?: true
-        //get saved card data
-        if (savedBankCard != null) {
-            val maskedPan = savedBankCard["maskedPanNumber"] as? String ?: ""
-            val token = savedBankCard["token"] as? String ?: ""
-            val cardType = savedBankCard["cardType"] as? String ?: ""
-            val creditCard = CreditCard.valueOf(cardType.uppercase())
-            savedCard = SavedCard(maskedPan = "**** **** **** " + maskedPan, savedCardToken = token, creditCard = creditCard )
-        }
+
+   
         if (buttonTextColorData != null){
             buttonTextColor = Color.argb(
                 (buttonTextColorData shr 24) and 0xFF,  // Alpha
@@ -74,12 +64,11 @@ class MainActivity: FlutterActivity(), MethodCallHandler, PaymobSdkListener {
             clientSecret = clientSecret.toString(),
             publicKey = publicKey.toString(),
             paymobSdkListener = this,
-            savedCard = savedCard//Optional Field if you have a saved card
         ).setButtonBackgroundColor(buttonBackgroundColor ?: Color.BLACK)
             .setButtonTextColor(buttonTextColor ?: Color.WHITE)
             .setAppName(appName)
-            .isAbleToSaveCard(showSaveCard ?: true)
-            .isSavedCardCheckBoxCheckedByDefault(saveCardDefault ?: false)
+            
+            
         .build()
         paymobsdk.start()
         return
