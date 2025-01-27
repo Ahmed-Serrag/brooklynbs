@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:clean_one/src/model/course_model.dart';
 import 'package:clean_one/src/model/payment_model.dart';
 import 'package:http/http.dart' as http;
-import '../services/end_points.dart';
+import '../constants/end_points.dart';
 
 class AuthManager {
   static Future<void> autoLogin(WidgetRef ref) async {

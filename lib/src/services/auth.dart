@@ -5,7 +5,7 @@ import 'package:clean_one/src/provider/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../model/user_model.dart';
-import '../services/end_points.dart';
+import '../constants/end_points.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';

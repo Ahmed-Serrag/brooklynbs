@@ -1,4 +1,3 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:clean_one/src/model/user_model.dart';
 import 'package:clean_one/src/provider/user_provider.dart';
 import 'package:clean_one/src/widgets/fourm_complain.dart';

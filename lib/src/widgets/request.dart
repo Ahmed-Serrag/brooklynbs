@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../services/end_points.dart';
+import '../constants/end_points.dart';
 
 class CombinedForm extends StatefulWidget {
   final dynamic user;
