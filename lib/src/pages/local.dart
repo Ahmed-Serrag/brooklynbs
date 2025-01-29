@@ -1,4 +1,5 @@
 import 'package:clean_one/src/model/user_model.dart';
+import 'package:clean_one/src/services/paymob_manager.dart';
 import 'package:clean_one/src/widgets/popup_dialog.dart';
 import 'package:clean_one/src/widgets/progress_card.dart';
 import 'package:clean_one/src/widgets/request.dart';
@@ -6,6 +7,7 @@ import 'package:clean_one/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../provider/user_provider.dart';
 
@@ -202,6 +204,9 @@ class HomePage extends ConsumerWidget {
                         );
                       },
                     ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                        onPressed: () async => _pay(), child: Text('Pay')),
                   ],
                 ),
               ),
@@ -229,4 +234,14 @@ class OldRequestsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _pay() async {
+  PaymobManager()
+      .getPaymentKey(
+          5050, "EGP", "test", "el-text", "ahmed@test.com", "010000000")
+      .then((String paymentKey) {
+    launchUrl(Uri.parse(
+        "https://accept.paymob.com/api/acceptance/iframes/726765?payment_token=$paymentKey"));
+  });
 }

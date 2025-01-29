@@ -19,13 +19,14 @@ android {
     }
 
     defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.clean_one"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdkVersion 23
-        targetSdkVersion 34
-        versionCode 1
-        versionName "1.0.0"
+        minSdk = 23
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     buildTypes {
@@ -34,17 +35,6 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
-    }
-
-    
-    buildFeatures {
-        dataBinding = true
-    }
-
-    dependencies {
-        // Add dependencies here
-        implementation 'androidx.appcompat:appcompat:1.7.0' // or latest version
-        implementation("com.paymob.sdk:Paymob-SDK:1.5.7")
     }
 }
 

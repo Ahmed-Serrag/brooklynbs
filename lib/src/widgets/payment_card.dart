@@ -1,5 +1,10 @@
+import 'package:clean_one/src/model/user_model.dart';
+import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:clean_one/src/services/paymob_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TransactionItem extends StatelessWidget {
   final String title;
@@ -145,7 +150,7 @@ class TransactionItem extends StatelessWidget {
   }
 }
 
-class PaymentDetailPage extends StatelessWidget {
+class PaymentDetailPage extends ConsumerWidget {
   final String title;
   final String amount;
   final String paidAmount;
@@ -164,7 +169,8 @@ class PaymentDetailPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userStateProvider);
     final currentTheme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -191,26 +197,29 @@ class PaymentDetailPage extends StatelessWidget {
             const SizedBox(height: 20),
             if (status == 'unpaid' || status == 'Portion Paid')
               ElevatedButton(
-                onPressed: () async {
-                  // Call the method without expecting a direct result
-                  await _payWithPaymob(
-                    "your_public_key",
-                    "your_client_secret",
-                    appName: "YourApp",
-                    buttonBackgroundColor: Colors.blue,
-                    buttonTextColor: Colors.white,
-                    saveCardDefault: true,
-                    showSaveCard: true,
-                  );
-
-                  // If needed, follow-up actions after the call
-                  print("Payment process invoked");
-                },
+                onPressed: () async => _pay(user!),
                 child: const Text('Pay Now'),
               ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _pay(
+    final UserModel user,
+  ) async {
+    PaymobManager()
+        .getPaymentKey(
+            remainingAmount.toInt(),
+            "EGP",
+            user.name.split(' ').first,
+            user.name.split(' ').last,
+            user.email,
+            user.phone)
+        .then((String paymentKey) {
+      launchUrl(Uri.parse(
+          "https://accept.paymob.com/api/acceptance/iframes/726765?payment_token=$paymentKey"));
+    });
   }
 }
