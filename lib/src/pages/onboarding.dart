@@ -15,177 +15,126 @@ class OnBoardingPage extends StatefulWidget {
 class OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(BuildContext context) async {
-    // Set 'isFirstTime' to false in SharedPreferences
+  Future<void> _onIntroEnd(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('isFirstTime', false);
 
-    // Now navigate to the LoginPage
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const LoginPage()),
     );
   }
 
-  Widget _buildFullscreenImage() {
-    return Image.asset(
-      'assets/fullscreen.jpg',
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-    );
-  }
-
-  Widget _buildImage(String assetName, [double width = 350]) {
+  Widget _buildImage(String assetName, {double width = 250}) {
     return Image.asset('assets/images/$assetName', width: width);
   }
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
+    double screenWidth = MediaQuery.of(context).size.width;
 
-    const pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: bodyStyle,
-      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      pageColor: Colors.white,
-      imagePadding: EdgeInsets.zero,
+    final pageDecoration = PageDecoration(
+      titleTextStyle: TextStyle(
+          fontSize: 26.0, fontWeight: FontWeight.bold, color: Colors.black87),
+      bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.black54),
+      imagePadding: EdgeInsets.all(20),
+      contentMargin: EdgeInsets.symmetric(horizontal: 20),
+      pageColor: Theme.of(context).secondaryHeaderColor,
     );
 
-    return IntroductionScreen(
-      key: introKey,
-      globalBackgroundColor: Colors.white,
-      allowImplicitScrolling: true,
-      autoScrollDuration: 3000,
-      infiniteAutoScroll: true,
-      globalHeader: Align(
-        alignment: Alignment.topRight,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
-            child: Text("hello"),
-          ),
-        ),
-      ),
-      globalFooter: SizedBox(
-        width: double.infinity,
-        height: 60,
-        child: ElevatedButton(
-          child: const Text(
-            'Let\'s go right away!',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          onPressed: () => _onIntroEnd(context),
-        ),
-      ),
-      pages: [
-        PageViewModel(
-          title: "Fractional shares",
-          body:
-              "Instead of having to buy an entire share, invest any amount you want.",
-          image: _buildImage('loading.png'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Learn as you go",
-          body:
-              "Download the Stockpile app and master the market with our mini-lesson.",
-          image: _buildImage('loading.png'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Kids and teens",
-          body:
-              "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-          image: _buildImage('loading.png'),
-          decoration: pageDecoration,
-        ),
-        // PageViewModel(
-        //   title: "Full Screen Page",
-        //   body:
-        //       "Pages can be full screen as well.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id euismod lectus, non tempor felis. Nam rutrum rhoncus est ac venenatis.",
-        //   image: _buildFullscreenImage(),
-        //   decoration: pageDecoration.copyWith(
-        //     contentMargin: const EdgeInsets.symmetric(horizontal: 16),
-        //     fullScreen: true,
-        //     bodyFlex: 2,
-        //     imageFlex: 3,
-        //     safeArea: 100,
-        //   ),
-        // ),
-        PageViewModel(
-          title: "Another title page",
-          body: "Another beautiful body text for this example onboarding",
-          image: _buildImage('loading.png'),
-          footer: ElevatedButton(
-            onPressed: () {
-              introKey.currentState?.animateScroll(0);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+    return Scaffold(
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
+      body: SafeArea(
+        child: IntroductionScreen(
+          key: introKey,
+          globalBackgroundColor: Theme.of(context).secondaryHeaderColor,
+          allowImplicitScrolling: true,
+          autoScrollDuration: 5000,
+          infiniteAutoScroll: true,
+          animationDuration: 600,
+          pages: [
+            PageViewModel(
+              title: "📅 Booking Exams",
+              body: "You can now book exams with ease.",
+              image: _buildImage('booking.png', width: screenWidth * 0.7),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "💳 Payments",
+              body:
+                  "Check your payments, view history, and pay securely with your credit card.",
+              image: _buildImage('paying.png', width: screenWidth * 0.9),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "👨‍👩‍👧 Kids and Teens",
+              body:
+                  "Allow your kids to track stocks and make trades with your approval.",
+              image: _buildImage('bookingexam.png', width: screenWidth * 0.7),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "🚀 Join the Future",
+              body: "Start your journey with us today!",
+              image: _buildImage('loading.png', width: screenWidth * 0.7),
+              decoration: pageDecoration,
+              footer: Center(
+                // ✅ Center the button
+                child: SizedBox(
+                  width: 140, // ✅ Set a fixed width for the button
+                  height: 40, // ✅ Set a fixed height (optional)
+                  child: ElevatedButton(
+                    onPressed: () => _onIntroEnd(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                  ),
+                ),
               ),
             ),
-            child: const Text(
-              'FooButton',
-              style: TextStyle(color: Colors.white),
+          ],
+          onDone: () => _onIntroEnd(context),
+          onSkip: () => _onIntroEnd(context),
+          showSkipButton: true,
+          skip: Text('Skip',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).scaffoldBackgroundColor)),
+          next: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child:
+                const Icon(Icons.arrow_forward, color: Colors.white, size: 22),
+          ),
+          done: Text('Done',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).scaffoldBackgroundColor)),
+          dotsDecorator: DotsDecorator(
+            size: const Size(10.0, 10.0),
+            color: Colors.grey.shade400,
+            activeSize: const Size(22.0, 10.0),
+            activeColor: Theme.of(context).scaffoldBackgroundColor,
+            activeShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25.0),
             ),
           ),
-          decoration: pageDecoration.copyWith(
-            bodyFlex: 6,
-            imageFlex: 6,
-            safeArea: 80,
-          ),
-        ),
-        PageViewModel(
-          title: "Title of last page - reversed",
-          bodyWidget: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Click on ", style: bodyStyle),
-              Icon(Icons.edit),
-              Text(" to edit a post", style: bodyStyle),
-            ],
-          ),
-          decoration: pageDecoration.copyWith(
-            bodyFlex: 2,
-            imageFlex: 4,
-            bodyAlignment: Alignment.bottomCenter,
-            imageAlignment: Alignment.topCenter,
-          ),
-          image: _buildImage('loading.png'),
-          reverse: true,
-        ),
-      ],
-      onDone: () => _onIntroEnd(context),
-      onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-      showSkipButton: true,
-      skipOrBackFlex: 0,
-      nextFlex: 0,
-      showBackButton: false,
-      //rtl: true, // Display as right-to-left
-      back: const Icon(Icons.arrow_back),
-      skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
-      curve: Curves.fastLinearToSlowEaseIn,
-      controlsMargin: const EdgeInsets.all(16),
-      controlsPadding: kIsWeb
-          ? const EdgeInsets.all(12.0)
-          : const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-      dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-        ),
-      ),
-      dotsContainerDecorator: const ShapeDecoration(
-        color: Colors.black87,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          dotsContainerDecorator:
+              const BoxDecoration(color: Colors.transparent),
         ),
       ),
     );

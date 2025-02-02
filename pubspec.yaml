@@ -35,7 +35,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
-  flutter_email_sender: ^6.0.3
   flutter_form_builder: ^9.6.0
   flutter_launcher_icons: ^0.14.2
   flutter_paymob_egypt: ^0.0.6
@@ -57,6 +56,8 @@ dependencies:
   simple_animation_progress_bar: ^1.8.2
   simple_circular_progress_bar: ^1.0.2
   url_launcher: ^6.3.1
+  webview_flutter: ^4.10.0
+  flutter_native_splash: ^2.4.4
 
 dev_dependencies:
   build_runner: ^2.4.13
@@ -65,20 +66,26 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/33.jpg" # Your icon file path
-  ios_icon: "assets/images/33.jpg" # Optional: Custom iOS icon
-  android_icon: "assets/images/33.jpg" # Optional: Custom Android icon
+  image_path: "assets/icon/logo.png"  # Make sure path is correct
+  adaptive_icon_background: "#FFFFFF"  # Ensures a white background
+  adaptive_icon_foreground: "assets/icon/logo.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"  # Set a background color (not black)
+  color_dark: "#012868"  # Dark mode splash background
+  image: assets/splash/logo.png  # Ensure correct path
+  image_dark: assets/splash/logo.png  # Dark mode splash image
+  android: true
+  ios: true
+  fullscreen: true  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
-  flutter_test:
-    sdk: flutter
-  riverpod_generator: ^2.6.2
-  riverpod_lint: ^2.6.1
+riverpod_generator: ^2.6.2
+riverpod_lint: ^2.6.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

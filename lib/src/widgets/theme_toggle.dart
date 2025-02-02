@@ -8,51 +8,40 @@ class ThemeToggleOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor, // Match ProfileOption background
-        borderRadius: BorderRadius.circular(12), // Same border radius
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4), // Consistent margin
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: 12), // Consistent padding
-      child: InkWell(
-        onTap: () {
-          AdaptiveTheme.of(context).toggleThemeMode();
-        },
-        child: Row(
-          children: [
-            // Icon that changes based on theme
-            Icon(
-              isDarkMode ? Icons.nightlight_round : Icons.wb_sunny,
-              color: isDarkMode
-                  ? Colors.amber
-                  : Colors.orange, // Custom icon colors
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context).secondaryHeaderColor,
+        ),
+        child: ListTile(
+          leading: Icon(
+            isDarkMode ? Icons.nightlight_round : Icons.wb_sunny,
+            color: Theme.of(context).primaryColor,
+          ),
+          title: Text(
+            'Toggle Theme',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: textColor,
             ),
-            const SizedBox(width: 16),
-            // Text
-            Text(
-              'Toggle Theme',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
-            ),
-            const Spacer(),
-            // Switch with custom colors
-            Switch(
-              value: isDarkMode,
-              onChanged: (value) {
-                AdaptiveTheme.of(context).toggleThemeMode();
-              },
-              activeColor:
-                  Theme.of(context).primaryColor, // Switch color in dark mode
-              inactiveThumbColor:
-                  Theme.of(context).primaryColor, // Switch color in light mode
-              inactiveTrackColor: Colors.grey[300], // Track color in light mode
-            ),
-          ],
+          ),
+          trailing: Switch(
+            value: isDarkMode,
+            onChanged: (value) {
+              AdaptiveTheme.of(context).toggleThemeMode();
+            },
+            activeColor: Theme.of(context).primaryColor,
+            inactiveThumbColor: Theme.of(context).primaryColor,
+            inactiveTrackColor: Colors.grey[300],
+          ),
+          onTap: () {
+            AdaptiveTheme.of(context).toggleThemeMode();
+          },
         ),
       ),
     );

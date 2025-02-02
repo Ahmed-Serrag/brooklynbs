@@ -1,10 +1,7 @@
-import 'package:clean_one/src/model/user_model.dart';
-import 'package:clean_one/src/provider/user_provider.dart';
-import 'package:clean_one/src/services/paymob_manager.dart';
+import 'package:clean_one/src/pages/payment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 class TransactionItem extends StatelessWidget {
   final String title;
@@ -150,76 +147,4 @@ class TransactionItem extends StatelessWidget {
   }
 }
 
-class PaymentDetailPage extends ConsumerWidget {
-  final String title;
-  final String amount;
-  final String paidAmount;
-  final double remainingAmount;
-  final String status;
-  final String dueDate;
 
-  const PaymentDetailPage({
-    super.key,
-    required this.title,
-    required this.amount,
-    required this.paidAmount,
-    required this.remainingAmount,
-    required this.status,
-    required this.dueDate,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userStateProvider);
-    final currentTheme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Payment Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: currentTheme.primaryColor,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text('Amount: $amount'),
-            Text('Paid Amount: $paidAmount'),
-            Text('Remaining Amount: $remainingAmount'),
-            Text('Due Date: $dueDate'),
-            const SizedBox(height: 20),
-            if (status == 'unpaid' || status == 'Portion Paid')
-              ElevatedButton(
-                onPressed: () async => _pay(user!),
-                child: const Text('Pay Now'),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pay(
-    final UserModel user,
-  ) async {
-    PaymobManager()
-        .getPaymentKey(
-            remainingAmount.toInt(),
-            "EGP",
-            user.name.split(' ').first,
-            user.name.split(' ').last,
-            user.email,
-            user.phone)
-        .then((String paymentKey) {
-      launchUrl(Uri.parse(
-          "https://accept.paymob.com/api/acceptance/iframes/726765?payment_token=$paymentKey"));
-    });
-  }
-}

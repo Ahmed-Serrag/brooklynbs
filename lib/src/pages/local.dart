@@ -1,13 +1,11 @@
 import 'package:clean_one/src/model/user_model.dart';
-import 'package:clean_one/src/services/paymob_manager.dart';
 import 'package:clean_one/src/widgets/popup_dialog.dart';
 import 'package:clean_one/src/widgets/progress_card.dart';
-import 'package:clean_one/src/widgets/request.dart';
+import 'package:clean_one/src/widgets/request_page.dart';
 import 'package:clean_one/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../provider/user_provider.dart';
 
@@ -15,45 +13,12 @@ class HomePage extends ConsumerWidget {
   HomePage({super.key});
 
   void _openForm(BuildContext context, UserModel user) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true, // Allow dismissal by tapping outside
-      barrierLabel: "Request Form",
-      transitionDuration:
-          const Duration(milliseconds: 300), // Animation duration
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Align(
-          alignment: Alignment.bottomCenter,
-          child: Material(
-            color: Colors.transparent, // Background is transparent
-            child: AnimatedContainer(
-              duration:
-                  const Duration(milliseconds: 300), // Animation for resizing
-              curve: Curves.easeInOut,
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height *
-                    0.5, // Start at 30% height
-                maxHeight: MediaQuery.of(context).size.height *
-                    0.9, // Limit to 90% height
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).secondaryHeaderColor,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-              child: CombinedForm(user: user),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 1), // Start off-screen at the bottom
-            end: Offset.zero, // Slide into view
-          ).animate(animation),
-          child: child,
-        );
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            RequestFormPage(user: user), // Navigates to the full page
+      ),
     );
   }
 
@@ -92,34 +57,21 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome back',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
+            const SizedBox(width: 12), // Adjust spacing
+            Expanded(
+              child: Text(
+                'Welcome back\n  ${user.name.split(' ').first}  ${user.name.split(' ').last}',
+                style: GoogleFonts.poppins(
+                  fontSize: 18, // Reduce font size slightly
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                const SizedBox(height: 7),
-                Text(
-                  '${user.name.split(' ').first} ${user.name.split(' ').last}',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none,
-                color: Colors.white,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2, // Ensures name does not break layout
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.notifications_none, color: Colors.white),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -204,9 +156,6 @@ class HomePage extends ConsumerWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                        onPressed: () async => _pay(), child: Text('Pay')),
                   ],
                 ),
               ),
@@ -234,14 +183,4 @@ class OldRequestsPage extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _pay() async {
-  PaymobManager()
-      .getPaymentKey(
-          5050, "EGP", "test", "el-text", "ahmed@test.com", "010000000")
-      .then((String paymentKey) {
-    launchUrl(Uri.parse(
-        "https://accept.paymob.com/api/acceptance/iframes/726765?payment_token=$paymentKey"));
-  });
 }

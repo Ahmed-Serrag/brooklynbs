@@ -103,7 +103,6 @@ Widget buildAppWithAdaptiveTheme({
     light: lightTheme,
     dark: darkTheme,
     initial: savedThemeMode ?? AdaptiveThemeMode.light, // Ensure default theme
-    debugShowFloatingThemeButton: true,
     builder: (lightTheme, darkTheme) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
