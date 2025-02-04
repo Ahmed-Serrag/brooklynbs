@@ -1,8 +1,8 @@
-import 'package:clean_one/src/model/user_model.dart';
-import 'package:clean_one/src/provider/user_provider.dart';
-import 'package:clean_one/src/widgets/fourm_complain.dart';
-import 'package:clean_one/src/widgets/profile_option.dart';
-import 'package:clean_one/src/widgets/theme_toggle.dart';
+import 'package:brooklynbs/src/model/user_model.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
+import 'package:brooklynbs/src/widgets/fourm_complain.dart';
+import 'package:brooklynbs/src/widgets/profile_option.dart';
+import 'package:brooklynbs/src/widgets/theme_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

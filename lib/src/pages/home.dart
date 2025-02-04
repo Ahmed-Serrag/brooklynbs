@@ -1,8 +1,8 @@
-import 'package:clean_one/src/pages/course.dart';
-import 'package:clean_one/src/pages/local.dart';
-import 'package:clean_one/src/pages/payment.dart';
-import 'package:clean_one/src/pages/profile.dart';
-import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:brooklynbs/src/pages/course.dart';
+import 'package:brooklynbs/src/pages/local.dart';
+import 'package:brooklynbs/src/pages/payment.dart';
+import 'package:brooklynbs/src/pages/profile.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

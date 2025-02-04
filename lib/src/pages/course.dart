@@ -1,5 +1,5 @@
-import 'package:clean_one/src/provider/user_provider.dart';
-import 'package:clean_one/src/widgets/Course_Card.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
+import 'package:brooklynbs/src/widgets/Course_Card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

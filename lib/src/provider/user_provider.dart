@@ -1,5 +1,5 @@
-import 'package:clean_one/src/model/course_model.dart';
-import 'package:clean_one/src/model/payment_model.dart';
+import 'package:brooklynbs/src/model/course_model.dart';
+import 'package:brooklynbs/src/model/payment_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:clean_one/src/services/auth.dart';
-import 'package:clean_one/src/pages/home.dart';
+import 'package:brooklynbs/src/services/auth.dart';
+import 'package:brooklynbs/src/pages/home.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

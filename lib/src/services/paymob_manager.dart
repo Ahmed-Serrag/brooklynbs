@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:clean_one/src/constants/end_points.dart';
+import 'package:brooklynbs/src/constants/end_points.dart';
 import 'package:http/http.dart' as http;
 
 class PaymobManager {

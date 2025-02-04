@@ -1,8 +1,9 @@
-import 'package:clean_one/src/model/user_model.dart';
-import 'package:clean_one/src/widgets/popup_dialog.dart';
-import 'package:clean_one/src/widgets/progress_card.dart';
-import 'package:clean_one/src/widgets/request_page.dart';
-import 'package:clean_one/src/widgets/widget_test.dart';
+import 'package:brooklynbs/src/model/user_model.dart';
+import 'package:brooklynbs/src/pages/request_page.dart';
+import 'package:brooklynbs/src/widgets/popup_dialog.dart';
+import 'package:brooklynbs/src/widgets/progress_card.dart';
+import 'package:brooklynbs/src/widgets/request_page.dart';
+import 'package:brooklynbs/src/widgets/widget_test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -152,7 +153,9 @@ class HomePage extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const OldRequestsPage()),
+                              builder: (context) => OldRequestsPage(
+                                    user: user,
+                                  )),
                         );
                       },
                     ),
@@ -162,24 +165,6 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class OldRequestsPage extends StatelessWidget {
-  const OldRequestsPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).secondaryHeaderColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).secondaryHeaderColor,
-        title: const Text('All Requests'),
-      ),
-      body: Center(
-        child: const Text('OLD REQUESTS PAGE'),
       ),
     );
   }

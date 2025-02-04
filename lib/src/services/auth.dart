@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:clean_one/src/model/course_model.dart';
-import 'package:clean_one/src/model/payment_model.dart';
-import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:brooklynbs/src/model/course_model.dart';
+import 'package:brooklynbs/src/model/payment_model.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../model/user_model.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:clean_one/src/Theme/themedata.dart';
+import 'package:brooklynbs/src/Theme/themedata.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart'; // Import splash package
-import 'package:clean_one/src/services/auth_manager.dart'; // Import AuthManager
+import 'package:brooklynbs/src/services/auth_manager.dart'; // Import AuthManager
 import 'src/pages/home.dart';
 import 'src/pages/login.dart';
 import 'src/pages/onboarding.dart';

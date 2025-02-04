@@ -2,12 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ThemeToggleOption extends StatelessWidget {
+class ThemeToggleOption extends StatefulWidget {
   const ThemeToggleOption({super.key});
 
   @override
+  _ThemeToggleOptionState createState() => _ThemeToggleOptionState();
+}
+
+class _ThemeToggleOptionState extends State<ThemeToggleOption> {
+  bool isDarkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  void _loadTheme() {
+    final mode = AdaptiveTheme.of(context).mode;
+    setState(() {
+      isDarkMode = mode == AdaptiveThemeMode.dark;
+    });
+  }
+
+  void _toggleTheme() {
+    AdaptiveTheme.of(context).toggleThemeMode();
+
+    // 🔄 Force immediate UI rebuild
+    Future.microtask(() {
+      setState(() {
+        isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
     return Padding(
@@ -32,16 +62,12 @@ class ThemeToggleOption extends StatelessWidget {
           ),
           trailing: Switch(
             value: isDarkMode,
-            onChanged: (value) {
-              AdaptiveTheme.of(context).toggleThemeMode();
-            },
+            onChanged: (value) => _toggleTheme(),
             activeColor: Theme.of(context).primaryColor,
             inactiveThumbColor: Theme.of(context).primaryColor,
             inactiveTrackColor: Colors.grey[300],
           ),
-          onTap: () {
-            AdaptiveTheme.of(context).toggleThemeMode();
-          },
+          onTap: _toggleTheme,
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:clean_one/src/constants/end_points.dart';
+import 'package:brooklynbs/src/constants/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';

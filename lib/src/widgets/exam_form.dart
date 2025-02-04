@@ -1,5 +1,5 @@
-import 'package:clean_one/src/model/exam.dart';
-import 'package:clean_one/src/provider/user_provider.dart';
+import 'package:brooklynbs/src/model/exam.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

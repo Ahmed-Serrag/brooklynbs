@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:clean_one/src/pages/login.dart';
+import 'package:brooklynbs/src/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingPage extends StatefulWidget {
