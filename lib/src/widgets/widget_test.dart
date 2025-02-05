@@ -116,7 +116,7 @@ class OldRequestsWidget extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: ElevatedButton(
                     onPressed: onNewRequestTap,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -129,7 +129,7 @@ class OldRequestsWidget extends StatelessWidget {
                       'New Request',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16,
+                        fontSize: 17,
                         color: Colors.white,
                       ),
                     ),
@@ -137,13 +137,13 @@ class OldRequestsWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: OutlinedButton(
+                  child: ElevatedButton(
                     onPressed: onCheckOldRequestsTap,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       side: const BorderSide(
-                        color: const Color(0xFF012868), // Border color
-                      ),
+                          // color: const Color(0xFF012868), // Border color
+                          ),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -152,6 +152,8 @@ class OldRequestsWidget extends StatelessWidget {
                     child: const Text(
                       'Check All Requests',
                       style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
                         color: const Color(0xFF012868),
                       ),
                     ),

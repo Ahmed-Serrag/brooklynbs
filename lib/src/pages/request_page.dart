@@ -107,10 +107,10 @@ class _OldRequestsPageState extends State<OldRequestsPage> {
       appBar: AppBar(
         title:
             Text('Old Requests', style: Theme.of(context).textTheme.bodyLarge),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
         iconTheme: Theme.of(context).iconTheme,
       ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading

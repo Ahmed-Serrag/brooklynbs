@@ -41,15 +41,19 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        final prefs = await SharedPreferences.getInstance();
 
         if (data['success'] == true) {
-          // Extract user data and payment history and courses
+          // Update user provider
           final userData = UserModel.fromJson(data['user']);
           ref.read(userStateProvider.notifier).login(userData);
+
+          // Update payment  providers
           final paymentData = List<PaymentHistoryModel>.from(data['payments']
               .map((payment) => PaymentHistoryModel.fromJson(payment)));
           ref.read(paymentHistoryProvider.notifier).state = paymentData;
 
+          // Update course provider
           final courseData = List<Course>.from(
             data['courses'].map((course) => Course.fromJson(course)),
           );
@@ -58,6 +62,9 @@ class AuthService {
           // Save user data and token to SharedPreferences
           await _saveTokenAndUserData(
               emailOrId, password, data['token'], userData);
+          await prefs.setBool('isFirstTime', false);
+          await prefs.setBool('isLoggedIn', true);
+
           return null; // Login successful, no error message
         } else {
           return data['message'] ?? 'Login failed';

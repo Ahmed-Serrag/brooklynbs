@@ -97,7 +97,7 @@ class _CombinedFormState extends State<CombinedForm> {
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     return Container(
       decoration: BoxDecoration(
-        color: currentTheme.cardColor, // Card background color
+        color: currentTheme.secondaryHeaderColor, // Card background color
         borderRadius: BorderRadius.circular(26), // Rounded corners
         // boxShadow: [
         //   BoxShadow(
@@ -151,31 +151,67 @@ class _CombinedFormState extends State<CombinedForm> {
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Colors.red, // Error border color
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Colors
+                                  .redAccent, // Focused error border color
+                              width: 3,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Theme.of(context)
+                              .secondaryHeaderColor, // Background color
                         ),
-                        style: TextStyle(color: textColor),
-                        items: ['Complaint', 'Request']
+                        style:
+                            TextStyle(color: textColor), // Dropdown text color
+                        items: [
+                          'Complaint',
+                          'Request',
+                        ] // 🔥 Added more options
                             .map((option) => DropdownMenuItem(
                                   value: option,
                                   child: Text(option),
                                 ))
                             .toList(),
-                        validator: FormBuilderValidators.required(
-                            errorText: 'This field is required'),
+                        initialValue: null, // Optional: Set default value
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'This field is required'),
+                        ]),
                         onChanged: (value) {
                           setState(() {
                             selectedType = value;
                             isStepTwoVisible = value != null;
                           });
                         },
+                        onSaved: (value) {
+                          print(
+                              'Dropdown value saved: $value'); // Debugging/logging
+                        },
+                        dropdownColor: Theme.of(context)
+                            .secondaryHeaderColor, // Background color of dropdown list
+                        icon: const Icon(Icons.arrow_drop_down,
+                            color: Color(0xFF012868)), // Custom dropdown icon
+                        iconSize: 30, // Size of the dropdown icon
+                        // elevation: 3, // Dropdown menu shadow
+                        menuMaxHeight: 300, // Max height of dropdown list
+                        isExpanded:
+                            true, // Ensures dropdown expands to full width
+                        autofocus: false, // Disable autofocus on dropdown
                       ),
                       const SizedBox(height: 16),
                       if (isStepTwoVisible) ...[
                         FormBuilderDropdown<String>(
                           name: 'selection',
                           decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context)
-                                .secondaryHeaderColor, // Background color
                             labelText: selectedType == 'Complaint'
                                 ? 'Complaint About'
                                 : 'Request About',
@@ -198,8 +234,27 @@ class _CombinedFormState extends State<CombinedForm> {
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.red, // Error border color
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors
+                                    .redAccent, // Focused error border color
+                                width: 3,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .secondaryHeaderColor, // Background color
                           ),
-                          style: TextStyle(color: textColor),
+                          style: TextStyle(
+                              color: textColor), // Dropdown text color
                           items: dropdownOptions
                               .map((option) => DropdownMenuItem(
                                     value: option,
@@ -208,6 +263,16 @@ class _CombinedFormState extends State<CombinedForm> {
                               .toList(),
                           validator: FormBuilderValidators.required(
                               errorText: 'Please select an option'),
+                          dropdownColor: Theme.of(context)
+                              .secondaryHeaderColor, // Background color of dropdown list
+                          icon: const Icon(Icons.arrow_drop_down,
+                              color: Color(0xFF012868)), // Custom dropdown icon
+                          iconSize: 30, // Size of the dropdown icon
+                          elevation: 3, // Dropdown menu shadow
+                          menuMaxHeight: 300, // Max height of dropdown list
+                          isExpanded:
+                              true, // Ensures dropdown expands to full width
+                          autofocus: false, // Disable autofocus on dropdown
                         ),
                         const SizedBox(height: 16),
                         FormBuilderTextField(
@@ -215,9 +280,6 @@ class _CombinedFormState extends State<CombinedForm> {
                               ? 'complain_details'
                               : 'request_details',
                           decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context)
-                                .secondaryHeaderColor, // Background color
                             labelText: selectedType == 'Complaint'
                                 ? 'Complaint Details'
                                 : 'Request Details',
@@ -240,8 +302,25 @@ class _CombinedFormState extends State<CombinedForm> {
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.red, // Error border color
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors
+                                    .redAccent, // Focused error border color
+                                width: 3,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .secondaryHeaderColor, // Background color
                           ),
-
                           maxLines:
                               null, // Allow unlimited lines for dynamic resizing
                           expands:
@@ -251,17 +330,29 @@ class _CombinedFormState extends State<CombinedForm> {
                           validator: FormBuilderValidators.required(
                               errorText: 'This field is required'),
                           style: TextStyle(
-                              color:
-                                  Colors.white), // Ensure text color is visible
+                              color: textColor), // Ensure text color is visible
                           textAlignVertical:
                               TextAlignVertical.top, // Align text at the top
                           minLines: 5,
-                          // maxLines: (MediaQuery.of(context).size.height * 0.4 / 20).floor(),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context)
+                                .cardColor, // Button background color
+                            foregroundColor:
+                                Theme.of(context).cardColor, // Text color
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(12), // Rounded corners
+                            ),
+                          ),
                           onPressed: _submitForm,
-                          child: const Text('Submit'),
+                          child: Text('Submit',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor)),
                         ),
                       ],
                     ],

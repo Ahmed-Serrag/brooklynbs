@@ -11,10 +11,17 @@ class RequestFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return Scaffold(
-      backgroundColor: currentTheme
-          .secondaryHeaderColor, // ✅ Change to a clean white background
+      backgroundColor:
+          currentTheme.cardColor, // ✅ Change to a clean white background
       appBar: AppBar(
-        title: const Text("New Request"),
+        title: Text(
+          "New Request",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: currentTheme.primaryColor, // ✅ Matching theme
+          ),
+        ),
         backgroundColor: currentTheme.cardColor, // ✅ Better color contrast
         elevation: 0,
       ),
@@ -30,7 +37,7 @@ class RequestFormPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
-                color: Colors.blue.shade900, // ✅ Matching theme
+                color: currentTheme.primaryColor, // ✅ Matching theme
               ),
             ),
             const SizedBox(height: 20), // ✅ Spacing before form
@@ -38,11 +45,11 @@ class RequestFormPage extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: currentTheme.cardColor,
+                  color: currentTheme.secondaryHeaderColor,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: currentTheme.dialogBackgroundColor,
+                      color: currentTheme.secondaryHeaderColor,
                       blurRadius: 3,
                       spreadRadius: 1,
                     ),

@@ -54,7 +54,7 @@ class ProgressCard extends StatelessWidget {
                 icon: Icon(
                   titleIcon,
                   color:
-                      const Color.fromRGBO(153, 57, 66, 1), // Use theme color
+                      const Color.fromRGBO(153, 57, 66, 0.8), // Use theme color
                   size: 24, // Adjust size
                 ),
                 onPressed: onTitleIconPressed, // Trigger navigation

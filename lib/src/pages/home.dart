@@ -60,9 +60,8 @@ class _HomePageWithNavState extends ConsumerState<HomePageWithNav> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: const Duration(milliseconds: 400),
               activeColor: Colors.white, // selected icon and text color
-              tabBackgroundColor: Theme.of(context)
-                  .iconTheme
-                  .color!, // selected tab background color
+              tabBackgroundColor:
+                  Color(0xFF012868), // selected tab background color
               color: Theme.of(context).primaryColor, // unselected icon color
               tabs: const [
                 GButton(

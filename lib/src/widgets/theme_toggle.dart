@@ -15,7 +15,11 @@ class _ThemeToggleOptionState extends State<ThemeToggleOption> {
   @override
   void initState() {
     super.initState();
-    _loadTheme();
+
+    // ✅ Ensuring AdaptiveTheme is accessed after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTheme();
+    });
   }
 
   void _loadTheme() {
@@ -27,12 +31,8 @@ class _ThemeToggleOptionState extends State<ThemeToggleOption> {
 
   void _toggleTheme() {
     AdaptiveTheme.of(context).toggleThemeMode();
-
-    // 🔄 Force immediate UI rebuild
-    Future.microtask(() {
-      setState(() {
-        isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
-      });
+    setState(() {
+      isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
     });
   }
 

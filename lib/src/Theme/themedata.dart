@@ -14,7 +14,7 @@ final ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: const Color(0xFF012868), // Light Greyish Background
   cardColor: const Color(0xFFFFFFFF),
   dialogBackgroundColor: Colors.grey[100], // Light Greyish Background
-  iconTheme: const IconThemeData(color: Color(0xFF012868)), // Dark Icons
+  iconTheme: const IconThemeData(color: Colors.black), // Dark Icons
 
   textTheme: const TextTheme(
     bodyLarge: TextStyle(color: Colors.black), // Dark Text for readability
@@ -57,8 +57,7 @@ final ThemeData darkTheme = ThemeData(
   primaryColorLight: Colors.white,
   splashColor: Colors.white,
   cardColor: const Color(0xFF1A1A1A), // Slightly lighter dark for cards
-  iconTheme:
-      const IconThemeData(color: Color.fromRGBO(1, 40, 104, 1)), // Light Icons
+  iconTheme: const IconThemeData(color: Colors.white), // Light Icons
 
   scaffoldBackgroundColor:
       const Color(0xFF012868), // Dark Grey/Black Background
