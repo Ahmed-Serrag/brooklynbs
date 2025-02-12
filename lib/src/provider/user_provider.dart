@@ -19,10 +19,12 @@ class UserStateNotifier extends StateNotifier<UserModel?> {
     final prefs = await SharedPreferences.getInstance();
     final loader = ref.read(loadingStateProvider);
 
-    loader.startLoader(context); // ✅ Show Loader Overlay
+    if (context.mounted) {
+      loader.startLoader(context); // ✅ Show Loader Overlay
+    }
 
     try {
-      // ✅ Remove user-related data from SharedPreferences
+      print("🔵 Logout started...");
       await prefs.remove('token');
       await prefs.remove('email');
       await prefs.remove('name');
@@ -39,23 +41,26 @@ class UserStateNotifier extends StateNotifier<UserModel?> {
       ref.read(courseProvider.notifier).state = [];
       ref.read(selectedIndexProvider.notifier).state = 0;
 
-      // ✅ Stop Loader **Before** Navigating
       if (context.mounted) {
-        loader.stopLoader(context);
-      }
+        print("🟢 Stopping Loader...");
+        loader.stopLoader(context); 
 
-      // ✅ Delay Navigation Until the Loader is Hidden
-      Future.delayed(const Duration(milliseconds: 200), () {
-        if (context.mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-            (route) => false, // Remove all previous routes
-          );
-        }
-      });
+        // ✅ Delay Navigation Until the Loader is Hidden
+        await Future.delayed(const Duration(milliseconds: 200), () {
+          if (context.mounted) {
+            print("🟡 Navigating to LoginPage...");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+              (route) => false, // Removes all previous routes
+            );
+          } else {
+            print("❌ Context unmounted! Cannot navigate.");
+          }
+        });
+      }
     } catch (e) {
-      print("Logout Error: $e");
+      print("🔴 Logout Error: $e");
     }
   }
 
