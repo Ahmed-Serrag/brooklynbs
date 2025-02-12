@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:brooklynbs/src/model/course_model.dart';
 import 'package:brooklynbs/src/model/payment_model.dart';
@@ -9,6 +10,7 @@ import '../constants/end_points.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:retry/retry.dart';
 
 class AuthService {
   // Login method
@@ -29,16 +31,25 @@ class AuthService {
         'password': password,
       });
 
-      final response = await http.post(
-        Uri.parse(Endpoints.baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer ${Endpoints.token}', // Make sure token is included
+      final response = await retry(
+        () async {
+          return await http
+              .post(
+            Uri.parse(Endpoints.baseUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ${Endpoints.token}',
+            },
+            body: body,
+          )
+              .timeout(Duration(seconds: 10), onTimeout: () {
+            throw TimeoutException(
+                'The connection has timed out, please try again.');
+          });
         },
-        body: body,
+        retryIf: (e) => e is http.ClientException || e is TimeoutException,
+        maxAttempts: 3, // Number of retry attempts
       );
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final prefs = await SharedPreferences.getInstance();
@@ -73,7 +84,13 @@ class AuthService {
         return 'Invalid email or password';
       }
     } catch (e) {
-      return 'An error occurred: $e';
+      if (e is TimeoutException) {
+        return 'Request timed out. Please try again.';
+      } else if (e is http.ClientException) {
+        return 'Network error. Check your internet connection.';
+      } else {
+        return 'An unexpected error occurred: $e';
+      }
     }
   }
 

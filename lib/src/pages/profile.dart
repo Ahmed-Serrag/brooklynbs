@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:brooklynbs/src/model/user_model.dart';
+import 'package:brooklynbs/src/pages/login.dart';
 import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:brooklynbs/src/widgets/fourm_complain.dart';
 import 'package:brooklynbs/src/widgets/profile_option.dart';
@@ -6,6 +8,7 @@ import 'package:brooklynbs/src/widgets/theme_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import '../widgets/dialog.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -118,7 +121,7 @@ class ProfilePage extends ConsumerWidget {
                 ProfileOption(
                   icon: Icons.logout_rounded,
                   title: 'Log Out',
-                  onTap: () => ref.read(userStateProvider.notifier).logout(),
+                  onTap: () => _showLogoutConfirmationDialog(context, ref),
                 ),
               ],
             ),
@@ -138,7 +141,6 @@ class ProfilePage extends ConsumerWidget {
                 onTap: () {
                   CustomBottomDialog.showBrooklynBusinessSchoolDialog(
                       context: context);
-                  ;
                 }),
             ProfileOption(
                 icon: Icons.description,
@@ -146,11 +148,84 @@ class ProfilePage extends ConsumerWidget {
                 onTap: () {
                   CustomBottomDialog.showBrooklynBusinessSchoolDialog(
                       context: context);
-                  ;
                 }),
           ],
         ),
       ),
     );
   }
+}
+
+/// **✅ Fixed Logout Confirmation Dialog with Loading & Navigation**
+void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            "Confirm Logout",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            "Are you sure you want to log out?",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel",
+                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close dialog first
+
+                // Show loading overlay
+                if (context.mounted) {
+                  context.loaderOverlay.show();
+                }
+
+                // Perform logout
+                await ref.read(userStateProvider.notifier).logout(context, ref);
+
+                // Ensure the widget is still mounted before navigation
+                if (context.mounted) {
+                  context.loaderOverlay.hide(); // Hide loader
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const LoginPage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+              child: const Text("Log Out",
+                  style: TextStyle(color: Colors.white, fontSize: 16)),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -43,9 +43,9 @@ class OldRequestsWidget extends StatelessWidget {
             thickness: 1.0,
           ),
           Text(
-            'Got a Request? ',
+            'Requests: Number of Requests ',
             style: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: 16,
               color: Theme.of(context).primaryColor,
             ),
             // softWrap: true,
@@ -129,7 +129,7 @@ class OldRequestsWidget extends StatelessWidget {
                       'New Request',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 17,
+                        fontSize: 15,
                         color: Colors.white,
                       ),
                     ),
@@ -153,7 +153,7 @@ class OldRequestsWidget extends StatelessWidget {
                       'Check All Requests',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 17,
+                        fontSize: 15,
                         color: const Color(0xFF012868),
                       ),
                     ),
