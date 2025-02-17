@@ -30,9 +30,22 @@ class _ThemeToggleOptionState extends State<ThemeToggleOption> {
   }
 
   void _toggleTheme() {
-    AdaptiveTheme.of(context).toggleThemeMode();
-    setState(() {
-      isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
+    final currentMode = AdaptiveTheme.of(context).mode;
+
+    // Toggle theme correctly
+    if (currentMode == AdaptiveThemeMode.light) {
+      AdaptiveTheme.of(context).setDark();
+    } else {
+      AdaptiveTheme.of(context).setLight();
+    }
+
+    // Delay updating state to ensure UI refresh
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() {
+          isDarkMode = AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
+        });
+      }
     });
   }
 

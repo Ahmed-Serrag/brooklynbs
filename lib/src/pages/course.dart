@@ -3,13 +3,28 @@ import 'package:brooklynbs/src/widgets/Course_Card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CoursePage extends ConsumerWidget {
+class CoursePage extends ConsumerStatefulWidget {
   const CoursePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Read courses from the provider
-    final courses = ref.watch(courseProvider);
+  ConsumerState<CoursePage> createState() => _CoursePageState();
+}
+
+class _CoursePageState extends ConsumerState<CoursePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Trigger data fetching when the page is loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(courseProvider2.notifier).fetchCourses(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch the course provider for changes
+    final coursesAsync = ref.watch(courseProvider2);
 
     return Scaffold(
       appBar: AppBar(
@@ -29,40 +44,33 @@ class CoursePage extends ConsumerWidget {
           ),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: courses.isEmpty
-            ? const Center(child: Text("No courses available"))
-            : ListView.builder(
-                itemCount: courses.length,
-                itemBuilder: (context, courseIndex) {
-                  final course = courses[courseIndex];
+        child: coursesAsync.when(
+          loading: () => const Center(child:Text('')),
+          error: (error, stackTrace) => Center(child: Text('Error: $error')),
+          data: (courses) {
+            if (courses.isEmpty) {
+              return const Center(child: Text("No courses available"));
+            }
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: course.courseDetails.values.map((detail) {
-                      final isProject = detail.code
-                          .startsWith('202'); // Check for '202' first
-                      final isType2 = !isProject &&
-                          detail.code
-                              .startsWith('2'); // Exclude '202' from Type 2
+            return ListView.builder(
+              itemCount: courses.length,
+              itemBuilder: (context, courseIndex) {
+                final course = courses[courseIndex];
 
-                      return CourseCard(
-                        title: detail.name, // Course name
-                        courseCode: detail.code, // Course code
-                        startDate: detail.date, // Start date
-                        grade: detail.grade, // Grade
-                        attendance: isType2
-                            ? int.tryParse(detail.attendance) ?? 0
-                            : null, // Attendance only for Type 2
-                        totalLectures: isType2
-                            ? int.tryParse(detail.totalLectures) ?? 1
-                            : null, // Total lectures only for Type 2
-                        isProject: isProject,
-                        isType2: isType2, // Determines layout type
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
+                return CourseCard(
+                  title: course.name, // Course name
+                  courseCode: course.code, // Course code
+                  startDate: '12/5/222', // Start date (if available)
+                  grade: 'grade', // Grade (if available)
+                  attendance: 7, // Attendance (if available)
+                  totalLectures: 12, // Total lectures (if available)
+                  isProject: false, // Determine if it's a project
+                  isType2: false, // Determine layout type
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

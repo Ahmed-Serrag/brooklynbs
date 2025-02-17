@@ -1,3 +1,4 @@
+import 'package:brooklynbs/src/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -6,8 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:brooklynbs/src/Theme/themedata.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:brooklynbs/src/services/auth_manager.dart';
-import 'package:brooklynbs/src/provider/loading_state.dart'; // ✅ Import Global Loader Provider
+import 'package:brooklynbs/src/provider/loading_state.dart';
 import 'src/pages/home.dart';
 import 'src/pages/login.dart';
 import 'src/pages/onboarding.dart';
@@ -19,7 +19,7 @@ void main() async {
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
   final prefs = await SharedPreferences.getInstance();
-  bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+  bool isFirstTime = prefs.getBool('_isFirstTime') ?? true;
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
   runApp(
@@ -67,7 +67,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       await Future.delayed(const Duration(milliseconds: 300), () async {
         if (widget.isLoggedIn && ref.read(userStateProvider) == null) {
-          await AuthManager.autoLogin(ref);
+          await AuthService().autoLogin(ref);
         }
       });
 
@@ -78,9 +78,9 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
-      duration: const Duration(milliseconds: 250),
-      reverseDuration: const Duration(milliseconds: 250),
-      overlayColor: Colors.grey.withOpacity(0.8),
+      duration: const Duration(milliseconds: 350),
+      reverseDuration: const Duration(milliseconds: 350),
+      overlayColor: Colors.grey.withOpacity(0.1),
       overlayWidgetBuilder: (_) => Center(
         child: Lottie.asset(
           'assets/icons/loading.json',
@@ -94,10 +94,13 @@ class _MyAppState extends ConsumerState<MyApp> {
             return MaterialPageRoute(
               builder: (context) => _isFirstTime == true
                   ? OnBoardingPage(
-                      onboardingComplete: () {
+                      onboardingComplete: () async {
                         setState(() {
                           _isFirstTime = false;
                         });
+
+                        await widget.prefs.setBool(
+                            '_isFirstTime', false); // Persist the change
 
                         Navigator.pushReplacement(
                           context,

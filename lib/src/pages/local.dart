@@ -104,8 +104,8 @@ class HomePage extends ConsumerWidget {
                   children: [
                     ProgressCard(
                       title: "Course Progress",
-                      secTitle: "Course Progress",
-                      thirdTitle: "Final Project",
+                      secTitle: "current course NAME",
+                      thirdTitle: "MBA Healthcare",
                       currentProgress: "70%",
                       totalProgress: "100%",
                       currentProgressIcon: Icons.check_circle_outline,

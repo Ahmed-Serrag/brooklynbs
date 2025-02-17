@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../widgets/dialog.dart';
+import '../services/auth.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -156,7 +157,7 @@ class ProfilePage extends ConsumerWidget {
   }
 }
 
-/// **✅ Fixed Logout Confirmation Dialog with Loading & Navigation**
+
 void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
@@ -199,7 +200,8 @@ void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
                 }
 
                 // Perform logout
-                await ref.read(userStateProvider.notifier).logout(context, ref);
+                // await ref.read(userStateProvider.notifier).logout(context, ref);
+                await AuthService().logout(context, ref);
 
                 // Ensure the widget is still mounted before navigation
                 if (context.mounted) {

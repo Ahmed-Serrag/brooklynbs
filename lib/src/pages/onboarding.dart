@@ -14,10 +14,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   Future<void> _onIntroEnd(BuildContext context) async {
-    // ✅ Ensure the callback is triggered
-    // widget.onboardingComplete();
-
-    // ✅ Navigate to LoginPage after setting preference
+    widget.onboardingComplete();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const LoginPage()),
     );
@@ -109,8 +106,8 @@ class OnBoardingPageState extends State<OnBoardingPage> {
               ),
             ),
           ],
-          onDone: () => widget.onboardingComplete,
-          onSkip: () => widget.onboardingComplete,
+          onDone: () => widget.onboardingComplete(),
+          onSkip: () => _onIntroEnd(context),
           showSkipButton: true,
         ),
       ),

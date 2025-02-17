@@ -3,8 +3,22 @@ import 'package:brooklynbs/src/widgets/payment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TransactionsPage extends ConsumerWidget {
+class TransactionsPage extends ConsumerStatefulWidget {
   const TransactionsPage({super.key});
+
+  @override
+  ConsumerState<TransactionsPage> createState() => _TransactionsPageState();
+}
+
+class _TransactionsPageState extends ConsumerState<TransactionsPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(paymentProvider2.notifier).fetchPayments(context, ref);
+    });
+  }
 
   String getOrdinal(int number) {
     if (number == 0) return 'First Payment';
@@ -16,13 +30,11 @@ class TransactionsPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final paymentHistory = ref.watch(paymentHistoryProvider);
-    final backgroundColor = Theme.of(context).cardColor;
+  Widget build(BuildContext context) {
+    final paymentHistoryAsync = ref.watch(paymentProvider2);
+
     return Scaffold(
-      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        // backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         title: const Text(
           'Payments',
@@ -32,28 +44,36 @@ class TransactionsPage extends ConsumerWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Theme.of(context).cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30), // Rounded top-left corner
-            topRight: Radius.circular(30), // Rounded top-right corner
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
           ),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: paymentHistory.length,
-          itemBuilder: (context, index) {
-            final payment = paymentHistory[index];
+        child: paymentHistoryAsync.when(
+          loading: () => const Center(child: Text('')),
+          error: (error, stackTrace) => Center(child: Text('Error: $error')),
+          data: (paymentHistory) {
+            if (paymentHistory.isEmpty) {
+              return const Center(child: Text("No payments available"));
+            }
 
-            return TransactionItem(
-              title: getOrdinal(index), // Use the ordinal title here
-              dueDate: payment.dueDate, // Pass the string directly
-              paidDate: payment.paidDate, // Pass the
-              paidAmount: payment.paidAmount,
+            return ListView.builder(
+              itemCount: paymentHistory.length,
+              itemBuilder: (context, index) {
+                final payment = paymentHistory[index];
 
-              amount: payment.amount, // Pass the string directly
-              isCredit:
-                  payment.status == 'paid', // Assuming 'paid' means a credit
-              status: payment.status,
+                return TransactionItem(
+                  title: getOrdinal(index),
+                  dueDate: payment.dueDate,
+                  paidDate: payment.paidDate ?? '',
+                  paidAmount: payment.paidAmount,
+                  amount: payment.amount,
+                  isCredit: payment.status == 'paid',
+                  status: payment.status,
+                );
+              },
             );
           },
         ),
