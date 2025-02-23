@@ -4,87 +4,49 @@ import 'package:brooklynbs/src/model/payments.dart';
 import 'package:brooklynbs/src/model/scholarShip.dart';
 import 'package:brooklynbs/src/pages/login.dart';
 import 'package:brooklynbs/src/provider/loading_state.dart';
+import 'package:brooklynbs/src/services/auth.dart';
 import 'package:brooklynbs/src/services/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
 
-// StateNotifier to manage user state
-class UserStateNotifier extends StateNotifier<UserModel?> {
-  UserStateNotifier() : super(null);
+final userStateProvider = StateNotifierProvider<UserStateNotifier, UserModel?>(
+  (ref) => UserStateNotifier(ref),
+);
 
-  void login(UserModel user) {
-    state = user; // Set the user when logged in
+class UserStateNotifier extends StateNotifier<UserModel?> {
+  final Ref ref;
+  final storage = const FlutterSecureStorage();
+
+  UserStateNotifier(this.ref) : super(null) {
+    _loadUserOnRestart();
   }
 
-  // Future<void> logout(BuildContext context, WidgetRef ref) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final loader = ref.read(loadingStateProvider);
+  void login(UserModel user) {
+    state = user;
+  }
 
-  //   if (context.mounted) {
-  //     loader.startLoader(context); // ✅ Show Loader Overlay
-  //   }
+  void logout() async {
+    state = null;
+    await storage.delete(key: 'st_token');
+  }
 
-  //   try {
-  //     print("🔵 Logout started...");
-  //     await prefs.remove('token');
-  //     await prefs.remove('email');
-  //     await prefs.remove('name');
-  //     await prefs.remove('stId');
-  //     await prefs.remove('phone');
-  //     await prefs.remove('ppURL');
-  //     await prefs.remove('isLoggedIn');
-  //     await prefs.remove('password');
-  //     await prefs.remove('emailOrId');
-
-  //     // ✅ Reset Riverpod state
-  //     ref.read(userStateProvider.notifier).state = null;
-  //     ref.read(paymentHistoryProvider.notifier).state = [];
-  //     ref.read(courseProvider.notifier).state = [];
-  //     ref.read(selectedIndexProvider.notifier).state = 0;
-
-  //     if (context.mounted) {
-  //       print("🟢 Stopping Loader...");
-  //       loader.stopLoader(context);
-
-  //       // ✅ Delay Navigation Until the Loader is Hidden
-  //       await Future.delayed(const Duration(milliseconds: 200), () {
-  //         if (context.mounted) {
-  //           print("🟡 Navigating to LoginPage...");
-  //           Navigator.pushAndRemoveUntil(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => const LoginPage()),
-  //             (route) => false, // Removes all previous routes
-  //           );
-  //         } else {
-  //           print("❌ Context unmounted! Cannot navigate.");
-  //         }
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print("🔴 Logout Error: $e");
-  //   }
-  // }
-
-  bool isLoggedIn() {
-    return state != null; // Return true if user is not null
+  Future<void> _loadUserOnRestart() async {
+    final token = await AuthService().getToken();
+    if (token != null) {
+      final user = await AuthService().fetchUserFromToken(token);
+      if (user != null) {
+        state = user;
+      }
+    }
   }
 }
 
-final userStateProvider = StateNotifierProvider<UserStateNotifier, UserModel?>(
-  (ref) => UserStateNotifier(),
-);
-
-final paymentHistoryProvider = StateProvider<List<PaymentHistoryModel>>((ref) {
-  return []; // Empty list as default for payment history
-});
-final courseProvider = StateProvider<List<Course>>((ref) {
-  return []; // Default empty list for courses
-});
-
 final selectedIndexProvider =
     StateProvider<int>((ref) => 0); // Default index 0 (Home)
+final deepLinkStateProvider = StateProvider<Uri?>((ref) => null);
 
 final dataServiceProvider = Provider((ref) => DataService());
 
@@ -103,13 +65,10 @@ class CourseNotifier2 extends StateNotifier<AsyncValue<List<Course>>> {
     final dataService = ref.read(dataServiceProvider);
 
     try {
-      // Start the loader
       loadingState.startLoader(context);
-      state = const AsyncValue.loading(); // Set loading state
+      state = const AsyncValue.loading();
 
-      // Get the token from SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('st_token');
+      final token = await AuthService().getToken();
 
       if (token == null) {
         throw Exception('No token found');
@@ -155,8 +114,7 @@ class PaymentNotifier2 extends StateNotifier<AsyncValue<List<PaymentModel>>> {
       loadingState.startLoader(context);
       state = const AsyncValue.loading();
 
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('st_token');
+      final token = await AuthService().getToken();
 
       if (token == null) {
         print("❌ No token found!");

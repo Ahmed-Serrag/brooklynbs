@@ -30,6 +30,7 @@ class ProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: currentTheme.secondaryHeaderColor,
@@ -65,66 +66,74 @@ class ProgressCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Current Progress Column
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        currentProgressIcon,
-                        color: currentTheme.primaryColor,
-                        size: 24, // Adjust this size as needed
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        secTitle,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: currentTheme.primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    currentProgress,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-              // Total Progress Column
-              thirdTitle.isNotEmpty
-                  ? Column(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              totalProgressIcon,
-                              color: currentTheme.primaryColor,
-                              size: 24, // Adjust this size as needed
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              thirdTitle,
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: currentTheme.primaryColor,
-                              ),
-                            ),
-                          ],
+                        Icon(
+                          currentProgressIcon,
+                          color: currentTheme.primaryColor,
+                          size: 20, // Adjust this size as needed
                         ),
-                        Text(
-                          totalProgress,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: currentTheme.primaryColor,
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            secTitle,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: currentTheme.primaryColor,
+                            ),
                           ),
                         ),
                       ],
+                    ),
+                    Text(
+                      currentProgress,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: currentTheme.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Total Progress Column
+              thirdTitle.isNotEmpty
+                  ? Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                totalProgressIcon,
+                                color: currentTheme.primaryColor,
+                                size: 24, // Adjust this size as needed
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                thirdTitle,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: currentTheme.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            totalProgress,
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: currentTheme.primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   : const SizedBox(
                       width: 1,

@@ -18,11 +18,14 @@ class ProfilePage extends ConsumerWidget {
   void _openForm(BuildContext context, UserModel user) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Makes the modal adjust for keyboard
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      isScrollControlled: true,
+      useRootNavigator: true,
+      routeSettings: const RouteSettings(name: 'ReusableForm'),
+      builder: (context) => Wrap(
+        children: [
+          ReusableForm(user: user),
+        ],
       ),
-      builder: (context) => ReusableForm(user: user),
     );
   }
 
@@ -157,7 +160,6 @@ class ProfilePage extends ConsumerWidget {
   }
 }
 
-
 void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
@@ -201,7 +203,7 @@ void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
 
                 // Perform logout
                 // await ref.read(userStateProvider.notifier).logout(context, ref);
-                await AuthService().logout(context, ref);
+                // await AuthService().logout(context, ref);
 
                 // Ensure the widget is still mounted before navigation
                 if (context.mounted) {

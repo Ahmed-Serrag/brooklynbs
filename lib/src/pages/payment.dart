@@ -56,7 +56,29 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
           error: (error, stackTrace) => Center(child: Text('Error: $error')),
           data: (paymentHistory) {
             if (paymentHistory.isEmpty) {
-              return const Center(child: Text("No payments available"));
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.receipt_long,
+                      size: 80, color: Colors.grey.shade400),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No Payments Yet",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "You have not made any payments yet.\nOnce you make a payment, it will appear here.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ],
+              );
             }
 
             return ListView.builder(

@@ -1,3 +1,4 @@
+import 'package:brooklynbs/src/services/auth.dart';
 import 'package:brooklynbs/src/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -31,6 +32,7 @@ class _CompleteFormState extends State<CompleteForm> {
   ];
 
   Future<void> _submitForm() async {
+    final token = await AuthService().getToken();
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final formData = _formKey.currentState!.value;
 
@@ -55,7 +57,7 @@ class _CompleteFormState extends State<CompleteForm> {
           Uri.parse(Endpoints.request), // Replace with your API URL
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${Endpoints.reqToken}',
+            'Authorization': 'Bearer $token',
           },
           body: jsonEncode(requestData),
         );

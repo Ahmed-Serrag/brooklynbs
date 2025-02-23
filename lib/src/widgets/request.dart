@@ -1,11 +1,16 @@
+import 'package:brooklynbs/src/pages/home.dart';
+import 'package:brooklynbs/src/provider/loading_state.dart';
+import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../constants/end_points.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CombinedForm extends StatefulWidget {
+class CombinedForm extends ConsumerStatefulWidget {
   final dynamic user;
 
   const CombinedForm({Key? key, required this.user}) : super(key: key);
@@ -14,10 +19,11 @@ class CombinedForm extends StatefulWidget {
   _CombinedFormState createState() => _CombinedFormState();
 }
 
-class _CombinedFormState extends State<CombinedForm> {
+class _CombinedFormState extends ConsumerState<CombinedForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   String? selectedType;
   bool isStepTwoVisible = false;
+  SharedPreferences? prefs;
 
   final List<String> dropdownOptions = [
     'Material',
@@ -29,63 +35,81 @@ class _CombinedFormState extends State<CombinedForm> {
     'Other',
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _initPrefs();
+  }
+
+  Future<void> _initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {}); // Update UI once SharedPreferences is ready
+  }
+
   Future<void> _submitForm() async {
+    if (prefs == null) {
+      await _initPrefs(); // Ensure prefs is initialized
+    }
+
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final formData = _formKey.currentState!.value;
+      final token = prefs?.getString('st_token') ?? '';
+      final loader = ref.read(loadingStateProvider);
 
       final requestData = {
-        "data": {
-          "student_num": widget.user.stID,
-          "name": widget.user.name,
-          "message": selectedType == 'Complaint'
-              ? formData['complain_details']
-              : formData['request_details'],
-          "type": selectedType,
-          "Email": widget.user.email,
-          "phone": widget.user.phone,
-          "GroupID": formData['selection'],
-        },
+        "type": formData['type'].toString(),
+        "field": formData['selection'].toString(),
+        "value": selectedType == 'Complaint'
+            ? formData['complain_details'].toString()
+            : formData['request_details'].toString(),
       };
 
       try {
+        loader.startLoader(context);
         final response = await http.post(
           Uri.parse(Endpoints.request),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${Endpoints.reqToken}',
+            'Authorization': 'Bearer $token',
           },
-          body: jsonEncode(requestData),
+          body: json.encode(requestData),
         );
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
+          loader.stopLoader(context);
           await showDialog(
             context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Success'),
-                content: const Text('Your submission was successful!'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('Submitted Successfully'),
+              content: const Text('Your submission was successful!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close dialog
+
+                    // 🔹 Update Riverpod's selected index to 0 (Home)
+                    ref.read(selectedIndexProvider.notifier).state = 0;
+
+                    // 🔹 Navigate back to HomePage
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePageWithNav()), // Home with navigation bar
+                      (route) => false, // Remove all previous screens
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Submission failed: ${response.body}')),
-          );
+          debugPrint('Failed to submit request: ${response.body}');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
+        debugPrint("Error: $e");
+      } finally {}
     } else {
       debugPrint('Validation failed');
     }
@@ -173,8 +197,8 @@ class _CombinedFormState extends State<CombinedForm> {
                         style:
                             TextStyle(color: textColor), // Dropdown text color
                         items: [
-                          'Complaint',
-                          'Request',
+                          'complain',
+                          'request',
                         ] // 🔥 Added more options
                             .map((option) => DropdownMenuItem(
                                   value: option,
@@ -192,10 +216,10 @@ class _CombinedFormState extends State<CombinedForm> {
                             isStepTwoVisible = value != null;
                           });
                         },
-                        onSaved: (value) {
-                          print(
-                              'Dropdown value saved: $value'); // Debugging/logging
-                        },
+                        // onSaved: (value) {
+                        //   print(
+                        //       'Dropdown value saved: $value'); // Debugging/logging
+                        // },
                         dropdownColor: Theme.of(context)
                             .secondaryHeaderColor, // Background color of dropdown list
                         icon: const Icon(Icons.arrow_drop_down,
@@ -212,7 +236,7 @@ class _CombinedFormState extends State<CombinedForm> {
                         FormBuilderDropdown<String>(
                           name: 'selection',
                           decoration: InputDecoration(
-                            labelText: selectedType == 'Complaint'
+                            labelText: selectedType == 'complain'
                                 ? 'Complaint About'
                                 : 'Request About',
                             labelStyle:

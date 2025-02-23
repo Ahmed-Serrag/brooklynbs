@@ -41,6 +41,7 @@ dependencies:
   flutter_native_splash: 2.4.4
   flutter_paymob_egypt: 0.0.6
   flutter_riverpod: 2.6.1
+  flutter_secure_storage: ^9.2.4
   form_builder_validators: 11.1.1
   google_fonts: 6.2.1
   google_nav_bar: 5.0.7
@@ -60,6 +61,7 @@ dependencies:
   shared_preferences: ^2.5.1
   simple_animation_progress_bar: 1.8.2
   simple_circular_progress_bar: 1.0.2
+  uni_links3: ^0.5.3
   url_launcher: 6.3.1
   webview_flutter: 4.10.0
 

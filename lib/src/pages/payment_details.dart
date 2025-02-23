@@ -97,28 +97,28 @@ class _PaymentDetailPageState extends ConsumerState<PaymentDetailPage> {
                 _buildPaymentDetailRow("Due Date", widget.dueDate),
                 _buildPaymentDetailRow("Account", user?.name ?? "Unknown"),
                 const Divider(thickness: 1, height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Partial Payment",
-                        style: TextStyle(fontSize: 14, color: Colors.black)),
-                    Switch(
-                      value: isPartialPayment,
-                      onChanged: (value) {
-                        setState(() {
-                          isPartialPayment = value;
-                          _updateSelectedAmount();
-                        });
-                      },
-                      activeColor: Colors.white,
-                      activeTrackColor: Colors.blue,
-                      inactiveTrackColor: Colors.grey[400],
-                      inactiveThumbColor: Colors.white,
-                    ),
-                    Text("Full Payment",
-                        style: TextStyle(fontSize: 14, color: Colors.black)),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text("Partial Payment",
+                //         style: TextStyle(fontSize: 14, color: Colors.black)),
+                //     Switch(
+                //       value: isPartialPayment,
+                //       onChanged: (value) {
+                //         setState(() {
+                //           isPartialPayment = value;
+                //           _updateSelectedAmount();
+                //         });
+                //       },
+                //       activeColor: Colors.white,
+                //       activeTrackColor: Colors.blue,
+                //       inactiveTrackColor: Colors.grey[400],
+                //       inactiveThumbColor: Colors.white,
+                //     ),
+                //     Text("Full Payment",
+                //         style: TextStyle(fontSize: 14, color: Colors.black)),
+                //   ],
+                // ),
                 if (isPartialPayment)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),

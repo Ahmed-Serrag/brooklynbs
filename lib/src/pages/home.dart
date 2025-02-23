@@ -2,6 +2,7 @@ import 'package:brooklynbs/src/pages/course.dart';
 import 'package:brooklynbs/src/pages/local.dart';
 import 'package:brooklynbs/src/pages/payment.dart';
 import 'package:brooklynbs/src/pages/profile.dart';
+import 'package:brooklynbs/src/pages/reset_password.dart';
 import 'package:brooklynbs/src/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,13 +17,10 @@ class HomePageWithNav extends ConsumerStatefulWidget {
 }
 
 class _HomePageWithNavState extends ConsumerState<HomePageWithNav> {
-  // final int _selectedIndex = 0;
-
-  // List of pages as widgets
-
   @override
   Widget build(BuildContext context) {
     final selectedIndex = ref.watch(selectedIndexProvider);
+    final deepLinkUri = ref.watch(deepLinkStateProvider);
 
     final widgetOptions = <Widget>[
       HomePage(),
@@ -30,6 +28,29 @@ class _HomePageWithNavState extends ConsumerState<HomePageWithNav> {
       const TransactionsPage(),
       const ProfilePage(),
     ];
+
+    if (deepLinkUri != null) {
+      final token = deepLinkUri.queryParameters["token"];
+      final email = deepLinkUri.queryParameters["email"];
+
+      // Navigate to ResetPasswordPage if token and email are available
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResetPasswordPage(
+                token: token!,
+                email: email!,
+              ),
+            ),
+          );
+        }
+      });
+
+      // Reset the deep link state to avoid multiple navigations
+      ref.read(deepLinkStateProvider.notifier).state = null;
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,

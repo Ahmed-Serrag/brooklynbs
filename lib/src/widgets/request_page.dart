@@ -10,65 +10,55 @@ class RequestFormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-    return PopScope(
-      canPop: true, // Set to `false` if you want to prevent popping
-      onPopInvoked: (bool didPop) {
-        if (didPop) {
-          // This is called when the pop action is invoked (e.g., back button is pressed)
-          // You can add custom logic here if needed
-          print("Navigating back from RequestFormPage");
-        }
-      },
-      child: Scaffold(
-        backgroundColor:
-            currentTheme.cardColor, // ✅ Change to a clean white background
-        appBar: AppBar(
-          title: Text(
-            "New Request",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: currentTheme.primaryColor, // ✅ Matching theme
-            ),
+    return Scaffold(
+      backgroundColor:
+          currentTheme.cardColor, // ✅ Change to a clean white background
+      appBar: AppBar(
+        title: Text(
+          "New Request",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: currentTheme.primaryColor, // ✅ Matching theme
           ),
-          backgroundColor: currentTheme.cardColor, // ✅ Better color contrast
-          elevation: 0,
         ),
-        body: Padding(
-          padding:
-              const EdgeInsets.all(20.0), // ✅ More padding for better spacing
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10), // ✅ Adds some top margin
-              Text(
-                "Fill out your request below",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: currentTheme.primaryColor, // ✅ Matching theme
-                ),
+        backgroundColor: currentTheme.cardColor, // ✅ Better color contrast
+        elevation: 0,
+      ),
+      body: Padding(
+        padding:
+            const EdgeInsets.all(20.0), // ✅ More padding for better spacing
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10), // ✅ Adds some top margin
+            Text(
+              "Fill out your request below",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: currentTheme.primaryColor, // ✅ Matching theme
               ),
-              const SizedBox(height: 20), // ✅ Spacing before form
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: currentTheme.secondaryHeaderColor,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: currentTheme.secondaryHeaderColor,
-                        blurRadius: 3,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: CombinedForm(user: user), // ✅ Embed the form
+            ),
+            const SizedBox(height: 20), // ✅ Spacing before form
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: currentTheme.secondaryHeaderColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: currentTheme.secondaryHeaderColor,
+                      blurRadius: 3,
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
+                child: CombinedForm(user: user), // ✅ Embed the form
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:brooklynbs/src/constants/end_points.dart';
+import 'package:brooklynbs/src/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
@@ -87,14 +88,14 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
     });
   }
 
-// Function to submit payment data
   Future<void> _submitPaymentData(Map<String, dynamic> requestData) async {
+    final token = await AuthService().getToken();
     try {
       final response = await http.post(
         Uri.parse(Endpoints.request), // API endpoint
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Endpoints.reqToken}',
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode(requestData),
       );

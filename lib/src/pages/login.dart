@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:brooklynbs/src/services/auth.dart';
 
-
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -27,7 +26,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
 
     final loader = ref.read(loadingStateProvider);
-    loader.startLoader(context); // ✅ Show Loader Overlay
+    loader.startLoader(context);
 
     try {
       print("🔵 Attempting Login..."); // Debugging
@@ -43,17 +42,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         _showErrorDialog(errorMessage);
       } else {
         print("✅ Login Success! Navigating to Home...");
+        loader.stopLoader(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePageWithNav()),
         );
       }
     } catch (e) {
-      if (mounted) loader.stopLoader(context); 
+      if (mounted) loader.stopLoader(context);
       print("❌ Exception in _handleLogin: $e");
       if (mounted) _showErrorDialog("An error occurred. Please try again.");
     } finally {
-      if (mounted) loader.stopLoader(context); 
+      if (mounted) loader.stopLoader(context);
     }
   }
 
@@ -110,7 +110,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
                         decoration: _inputDecoration(
-                            context, 'Email or ID', 'Enter your email or ID'),
+                            context, 'Email / ID', 'Enter your Email or ID'),
                       ),
                       const SizedBox(height: 16),
                       TextField(
@@ -143,7 +143,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                       const SizedBox(height: 20),
                       GestureDetector(
-                        onTap: _showForgotPasswordDialog,
+                        onTap: showForgotPasswordDialog,
                         child: Text(
                           'Forgot Password?',
                           style: TextStyle(
@@ -205,15 +205,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  void _showForgotPasswordDialog() {
+  void showForgotPasswordDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Enter ID to Reset Password'),
+          title: const Text('Enter Your Email'),
           content: TextField(
-            controller: _idController,
-            decoration: const InputDecoration(hintText: "Enter your ID"),
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(hintText: "Enter your email"),
           ),
           actions: <Widget>[
             TextButton(
@@ -221,17 +222,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                final id = _idController.text.trim();
-                if (id.isNotEmpty) {
-                  _sendPasswordResetEmail(id);
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Password reset email sent!')),
-                  );
+              onPressed: () async {
+                final email = _emailController.text.trim();
+                if (email.isNotEmpty) {
+                  try {
+                    await AuthService().sendPasswordResetEmail(email);
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Password reset email sent!')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(e.toString())),
+                    );
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ID cannot be empty')),
+                    const SnackBar(content: Text('Email cannot be empty')),
                   );
                 }
               },
@@ -243,10 +251,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  void _sendPasswordResetEmail(String id) {
-    // Implement the logic to send a password reset email here
-    // This method should be defined in your _LoginPageState class
-  }
   void _showErrorDialog(String errorMessage) {
     showDialog(
       context: context,
@@ -254,7 +258,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Login Failed"),
-          content: Text(errorMessage , style: const TextStyle(color: Colors.red)),
+          content:
+              Text(errorMessage, style: const TextStyle(color: Colors.red)),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
